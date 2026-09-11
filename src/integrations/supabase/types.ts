@@ -14,7 +14,113 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      reports: {
+        Row: {
+          created_at: string
+          details: string[]
+          id: string
+          role: string
+          session_id: string | null
+          title: string
+          zone_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string[]
+          id?: string
+          role: string
+          session_id?: string | null
+          title: string
+          zone_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: string[]
+          id?: string
+          role?: string
+          session_id?: string | null
+          title?: string
+          zone_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_zone_id_fkey"
+            columns: ["zone_id"]
+            isOneToOne: false
+            referencedRelation: "zones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      zones: {
+        Row: {
+          anomaly_flag: string | null
+          created_at: string
+          district: string
+          id: string
+          lat: number
+          lng: number
+          name: string
+          population: number
+          possible_reason: string
+          precautions: string[]
+          publicly_visible: boolean
+          severity_score: number
+          sources: Json
+          state: string
+          summary: string
+          top_signals: Json
+          trend: string
+          trend_pct: number
+          updated_at: string
+          weekly: number[]
+        }
+        Insert: {
+          anomaly_flag?: string | null
+          created_at?: string
+          district: string
+          id: string
+          lat: number
+          lng: number
+          name: string
+          population: number
+          possible_reason?: string
+          precautions?: string[]
+          publicly_visible?: boolean
+          severity_score?: number
+          sources?: Json
+          state?: string
+          summary?: string
+          top_signals?: Json
+          trend?: string
+          trend_pct?: number
+          updated_at?: string
+          weekly?: number[]
+        }
+        Update: {
+          anomaly_flag?: string | null
+          created_at?: string
+          district?: string
+          id?: string
+          lat?: number
+          lng?: number
+          name?: string
+          population?: number
+          possible_reason?: string
+          precautions?: string[]
+          publicly_visible?: boolean
+          severity_score?: number
+          sources?: Json
+          state?: string
+          summary?: string
+          top_signals?: Json
+          trend?: string
+          trend_pct?: number
+          updated_at?: string
+          weekly?: number[]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
