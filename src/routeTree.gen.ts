@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -17,10 +18,15 @@ import { Route as OfficialsRouteImport } from './routes/officials'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as VerifyRoleRouteImport } from './routes/verify.$role'
 import { Route as ZoneZoneIdRouteImport } from './routes/zone.$zoneId'
+import { Route as AuthenticatedReportCitizenRouteImport } from './routes/_authenticated.report.citizen'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -58,6 +64,12 @@ const ZoneZoneIdRoute = ZoneZoneIdRouteImport.update({
   path: '/zone/$zoneId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedReportCitizenRoute =
+  AuthenticatedReportCitizenRouteImport.update({
+    id: '/report/citizen',
+    path: '/report/citizen',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
+  '/report/citizen': typeof AuthenticatedReportCitizenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,10 +91,12 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
+  '/report/citizen': typeof AuthenticatedReportCitizenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/faq': typeof FaqRoute
@@ -89,6 +104,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
+  '/_authenticated/report/citizen': typeof AuthenticatedReportCitizenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +117,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/verify/$role'
     | '/zone/$zoneId'
+    | '/report/citizen'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,9 +128,11 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/verify/$role'
     | '/zone/$zoneId'
+    | '/report/citizen'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/about'
     | '/auth'
     | '/faq'
@@ -121,10 +140,12 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/verify/$role'
     | '/zone/$zoneId'
+    | '/_authenticated/report/citizen'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   FaqRoute: typeof FaqRoute
@@ -141,6 +162,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -192,11 +220,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ZoneZoneIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/report/citizen': {
+      id: '/_authenticated/report/citizen'
+      path: '/report/citizen'
+      fullPath: '/report/citizen'
+      preLoaderRoute: typeof AuthenticatedReportCitizenRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedReportCitizenRoute: typeof AuthenticatedReportCitizenRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedReportCitizenRoute: AuthenticatedReportCitizenRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   FaqRoute: FaqRoute,
