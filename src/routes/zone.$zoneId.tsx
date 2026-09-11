@@ -151,7 +151,7 @@ function ZoneDetail() {
                     <span className="numeral text-muted-foreground">{s.count}</span>
                   </div>
                   <Progress
-                    value={(s.count / zone.topSignals[0].count) * 100}
+                    value={(s.count / (zone.topSignals[0]?.count || 1)) * 100}
                     className="mt-2"
                   />
                 </div>

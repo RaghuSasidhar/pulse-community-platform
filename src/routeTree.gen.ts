@@ -16,12 +16,14 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as OfficialsRouteImport } from './routes/officials'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as AuthenticatedMyReportsRouteImport } from './routes/_authenticated.my-reports'
 import { Route as VerifyRoleRouteImport } from './routes/verify.$role'
 import { Route as ZoneZoneIdRouteImport } from './routes/zone.$zoneId'
 import { Route as AuthenticatedReportCitizenRouteImport } from './routes/_authenticated.report.citizen'
 import { Route as AuthenticatedReportDoctorRouteImport } from './routes/_authenticated.report.doctor'
 import { Route as AuthenticatedReportLabRouteImport } from './routes/_authenticated.report.lab'
 import { Route as AuthenticatedReportPharmacyRouteImport } from './routes/_authenticated.report.pharmacy'
+import { Route as AuthenticatedReportSubmittedRouteImport } from './routes/_authenticated.report.submitted'
 import { Route as AuthenticatedReportVolunteerRouteImport } from './routes/_authenticated.report.volunteer'
 
 const IndexRoute = IndexRouteImport.update({
@@ -58,6 +60,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedMyReportsRoute = AuthenticatedMyReportsRouteImport.update({
+  id: '/my-reports',
+  path: '/my-reports',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const VerifyRoleRoute = VerifyRoleRouteImport.update({
   id: '/verify/$role',
   path: '/verify/$role',
@@ -91,6 +98,12 @@ const AuthenticatedReportPharmacyRoute =
     path: '/report/pharmacy',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedReportSubmittedRoute =
+  AuthenticatedReportSubmittedRouteImport.update({
+    id: '/report/submitted',
+    path: '/report/submitted',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedReportVolunteerRoute =
   AuthenticatedReportVolunteerRouteImport.update({
     id: '/report/volunteer',
@@ -105,12 +118,14 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/officials': typeof OfficialsRoute
   '/privacy': typeof PrivacyRoute
+  '/my-reports': typeof AuthenticatedMyReportsRoute
   '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
   '/report/citizen': typeof AuthenticatedReportCitizenRoute
   '/report/doctor': typeof AuthenticatedReportDoctorRoute
   '/report/lab': typeof AuthenticatedReportLabRoute
   '/report/pharmacy': typeof AuthenticatedReportPharmacyRoute
+  '/report/submitted': typeof AuthenticatedReportSubmittedRoute
   '/report/volunteer': typeof AuthenticatedReportVolunteerRoute
 }
 export interface FileRoutesByTo {
@@ -120,12 +135,14 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/officials': typeof OfficialsRoute
   '/privacy': typeof PrivacyRoute
+  '/my-reports': typeof AuthenticatedMyReportsRoute
   '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
   '/report/citizen': typeof AuthenticatedReportCitizenRoute
   '/report/doctor': typeof AuthenticatedReportDoctorRoute
   '/report/lab': typeof AuthenticatedReportLabRoute
   '/report/pharmacy': typeof AuthenticatedReportPharmacyRoute
+  '/report/submitted': typeof AuthenticatedReportSubmittedRoute
   '/report/volunteer': typeof AuthenticatedReportVolunteerRoute
 }
 export interface FileRoutesById {
@@ -137,12 +154,14 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/officials': typeof OfficialsRoute
   '/privacy': typeof PrivacyRoute
+  '/_authenticated/my-reports': typeof AuthenticatedMyReportsRoute
   '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
   '/_authenticated/report/citizen': typeof AuthenticatedReportCitizenRoute
   '/_authenticated/report/doctor': typeof AuthenticatedReportDoctorRoute
   '/_authenticated/report/lab': typeof AuthenticatedReportLabRoute
   '/_authenticated/report/pharmacy': typeof AuthenticatedReportPharmacyRoute
+  '/_authenticated/report/submitted': typeof AuthenticatedReportSubmittedRoute
   '/_authenticated/report/volunteer': typeof AuthenticatedReportVolunteerRoute
 }
 export interface FileRouteTypes {
@@ -154,12 +173,14 @@ export interface FileRouteTypes {
     | '/faq'
     | '/officials'
     | '/privacy'
+    | '/my-reports'
     | '/verify/$role'
     | '/zone/$zoneId'
     | '/report/citizen'
     | '/report/doctor'
     | '/report/lab'
     | '/report/pharmacy'
+    | '/report/submitted'
     | '/report/volunteer'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -169,12 +190,14 @@ export interface FileRouteTypes {
     | '/faq'
     | '/officials'
     | '/privacy'
+    | '/my-reports'
     | '/verify/$role'
     | '/zone/$zoneId'
     | '/report/citizen'
     | '/report/doctor'
     | '/report/lab'
     | '/report/pharmacy'
+    | '/report/submitted'
     | '/report/volunteer'
   id:
     | '__root__'
@@ -185,12 +208,14 @@ export interface FileRouteTypes {
     | '/faq'
     | '/officials'
     | '/privacy'
+    | '/_authenticated/my-reports'
     | '/verify/$role'
     | '/zone/$zoneId'
     | '/_authenticated/report/citizen'
     | '/_authenticated/report/doctor'
     | '/_authenticated/report/lab'
     | '/_authenticated/report/pharmacy'
+    | '/_authenticated/report/submitted'
     | '/_authenticated/report/volunteer'
   fileRoutesById: FileRoutesById
 }
@@ -257,6 +282,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/my-reports': {
+      id: '/_authenticated/my-reports'
+      path: '/my-reports'
+      fullPath: '/my-reports'
+      preLoaderRoute: typeof AuthenticatedMyReportsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/verify/$role': {
       id: '/verify/$role'
       path: '/verify/$role'
@@ -299,6 +331,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportPharmacyRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/report/submitted': {
+      id: '/_authenticated/report/submitted'
+      path: '/report/submitted'
+      fullPath: '/report/submitted'
+      preLoaderRoute: typeof AuthenticatedReportSubmittedRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/report/volunteer': {
       id: '/_authenticated/report/volunteer'
       path: '/report/volunteer'
@@ -310,18 +349,22 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedMyReportsRoute: typeof AuthenticatedMyReportsRoute
   AuthenticatedReportCitizenRoute: typeof AuthenticatedReportCitizenRoute
   AuthenticatedReportDoctorRoute: typeof AuthenticatedReportDoctorRoute
   AuthenticatedReportLabRoute: typeof AuthenticatedReportLabRoute
   AuthenticatedReportPharmacyRoute: typeof AuthenticatedReportPharmacyRoute
+  AuthenticatedReportSubmittedRoute: typeof AuthenticatedReportSubmittedRoute
   AuthenticatedReportVolunteerRoute: typeof AuthenticatedReportVolunteerRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedMyReportsRoute: AuthenticatedMyReportsRoute,
   AuthenticatedReportCitizenRoute: AuthenticatedReportCitizenRoute,
   AuthenticatedReportDoctorRoute: AuthenticatedReportDoctorRoute,
   AuthenticatedReportLabRoute: AuthenticatedReportLabRoute,
   AuthenticatedReportPharmacyRoute: AuthenticatedReportPharmacyRoute,
+  AuthenticatedReportSubmittedRoute: AuthenticatedReportSubmittedRoute,
   AuthenticatedReportVolunteerRoute: AuthenticatedReportVolunteerRoute,
 }
 
