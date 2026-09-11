@@ -1,3 +1,4 @@
+import { createLovableAiGatewayProvider } from "./ai-gateway.server";
 import { createServerFn } from "@tanstack/react-start";
 import { NoObjectGeneratedError, Output, streamText } from "ai";
 import { z } from "zod";
@@ -42,7 +43,7 @@ export const summarizeZoneSignals = createServerFn({ method: "POST" })
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("Missing LOVABLE_API_KEY");
 
-    const gateway = createLovableProvider(key);
+    const gateway = createLovableAiGatewayProvider(key);
 
     const prompt = [
       "You are a public-health signal summarizer for a community reporting app.",
@@ -74,13 +75,3 @@ export const summarizeZoneSignals = createServerFn({ method: "POST" })
       throw error;
     }
   });
-
-function createLovableProvider(key: string) {
-  // Imported lazily-free: helper lives in a server-only module.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  return providerFactory(key);
-}
-
-import { createLovableAiGatewayProvider } from "./ai-gateway.server";
-
-const providerFactory = (key: string) => createLovableAiGatewayProvider(key);
