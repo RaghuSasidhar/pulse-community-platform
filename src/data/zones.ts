@@ -278,3 +278,31 @@ export function severityFromScore(score: number): SeverityTier {
   if (score >= 30) return "moderate";
   return "low";
 }
+
+/** A fake/illustrative "detected disease" signal for an area. Demo only. */
+export type DiseaseSignal = {
+  zoneId: string;
+  disease: string;
+  matchedSignals: string[];
+  affectedEstimate: number;
+  confidence: "Low" | "Moderate" | "High";
+  trend: "rising" | "steady" | "falling";
+  trendPct: number;
+  sourceCorroboration: string;
+  updatedAgo: string;
+};
+
+export const diseaseSignals: Record<string, DiseaseSignal> = {
+  "z-kalyan-east": {
+    zoneId: "z-kalyan-east",
+    disease: "Acute respiratory infection cluster",
+    matchedSignals: ["Fever (3+ days)", "Cough", "Body pains"],
+    affectedEstimate: 68,
+    confidence: "Moderate",
+    trend: "rising",
+    trendPct: 34,
+    sourceCorroboration:
+      "Citizen reports + GP syndromic notifications + 1 lab-confirmed case",
+    updatedAgo: "12 min ago",
+  },
+};
