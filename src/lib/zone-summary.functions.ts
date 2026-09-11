@@ -63,7 +63,7 @@ export const summarizeZoneSignals = createServerFn({ method: "POST" })
 
     try {
       const result = streamText({
-        model: gateway("google/gemini-3.8-flash"),
+        model: gateway("openai/gpt-5.4-mini"),
         output: Output.object({ schema: SummarySchema }),
         prompt,
       });
