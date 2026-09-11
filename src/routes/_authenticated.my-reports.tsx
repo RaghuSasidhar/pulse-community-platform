@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/my-reports")({
       },
     ],
   }),
-  component: MyReports;
+  component: MyReports,
 });
 
 function MyReports() {
