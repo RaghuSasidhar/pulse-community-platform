@@ -11,8 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as OfficialsRouteImport } from './routes/officials'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as VerifyRoleRouteImport } from './routes/verify.$role'
 import { Route as ZoneZoneIdRouteImport } from './routes/zone.$zoneId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -25,14 +28,29 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OfficialsRoute = OfficialsRouteImport.update({
+  id: '/officials',
+  path: '/officials',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyRoleRoute = VerifyRoleRouteImport.update({
+  id: '/verify/$role',
+  path: '/verify/$role',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ZoneZoneIdRoute = ZoneZoneIdRouteImport.update({
@@ -44,38 +62,75 @@ const ZoneZoneIdRoute = ZoneZoneIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/faq': typeof FaqRoute
+  '/officials': typeof OfficialsRoute
   '/privacy': typeof PrivacyRoute
+  '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/faq': typeof FaqRoute
+  '/officials': typeof OfficialsRoute
   '/privacy': typeof PrivacyRoute
+  '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
   '/faq': typeof FaqRoute
+  '/officials': typeof OfficialsRoute
   '/privacy': typeof PrivacyRoute
+  '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/faq' | '/privacy' | '/zone/$zoneId'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/auth'
+    | '/faq'
+    | '/officials'
+    | '/privacy'
+    | '/verify/$role'
+    | '/zone/$zoneId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/faq' | '/privacy' | '/zone/$zoneId'
-  id: '__root__' | '/' | '/about' | '/faq' | '/privacy' | '/zone/$zoneId'
+  to:
+    | '/'
+    | '/about'
+    | '/auth'
+    | '/faq'
+    | '/officials'
+    | '/privacy'
+    | '/verify/$role'
+    | '/zone/$zoneId'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/auth'
+    | '/faq'
+    | '/officials'
+    | '/privacy'
+    | '/verify/$role'
+    | '/zone/$zoneId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AuthRoute: typeof AuthRoute
   FaqRoute: typeof FaqRoute
+  OfficialsRoute: typeof OfficialsRoute
   PrivacyRoute: typeof PrivacyRoute
+  VerifyRoleRoute: typeof VerifyRoleRoute
   ZoneZoneIdRoute: typeof ZoneZoneIdRoute
 }
 
@@ -95,6 +150,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/faq': {
       id: '/faq'
       path: '/faq'
@@ -102,11 +164,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/officials': {
+      id: '/officials'
+      path: '/officials'
+      fullPath: '/officials'
+      preLoaderRoute: typeof OfficialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verify/$role': {
+      id: '/verify/$role'
+      path: '/verify/$role'
+      fullPath: '/verify/$role'
+      preLoaderRoute: typeof VerifyRoleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/zone/$zoneId': {
@@ -122,8 +198,11 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AuthRoute: AuthRoute,
   FaqRoute: FaqRoute,
+  OfficialsRoute: OfficialsRoute,
   PrivacyRoute: PrivacyRoute,
+  VerifyRoleRoute: VerifyRoleRoute,
   ZoneZoneIdRoute: ZoneZoneIdRoute,
 }
 export const routeTree = rootRouteImport
