@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { K_ANONYMITY_THRESHOLD, severityLabel, severityToken, zones } from "@/data/zones";
+import { K_ANONYMITY_THRESHOLD, severityChip, severityLabel, zones } from "@/data/zones";
 
 export const Route = createFileRoute("/officials")({
   head: () => ({
@@ -144,7 +144,7 @@ function Officials() {
                       </TableCell>
                       <TableCell>
                         <span
-                          className={`rounded px-2 py-0.5 text-xs text-nightfall ${severityToken[z.severity]}`}
+                          className={`rounded px-2 py-0.5 text-xs ${severityChip[z.severity]}`}
                         >
                           {severityLabel[z.severity]}
                         </span>

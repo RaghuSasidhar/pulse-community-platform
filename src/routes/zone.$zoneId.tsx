@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { getZone, severityLabel, severityToken } from "@/data/zones";
+import { getZone, severityChip, severityLabel } from "@/data/zones";
 
 export const Route = createFileRoute("/zone/$zoneId")({
   loader: ({ params }) => {
@@ -62,7 +62,7 @@ function ZoneDetail() {
             </div>
             <div className="flex items-center gap-3">
               <span
-                className={`rounded-md px-3 py-1.5 text-sm font-medium text-nightfall ${severityToken[zone.severity]}`}
+                className={`rounded-md px-3 py-1.5 text-sm font-medium ${severityChip[zone.severity]}`}
               >
                 {severityLabel[zone.severity]}
               </span>

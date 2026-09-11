@@ -50,11 +50,11 @@ export const severityToken: Record<SeverityTier, string> = {
   critical: "bg-sev-4",
 };
 
-export const severityTextToken: Record<SeverityTier, string> = {
-  low: "text-nightfall",
-  moderate: "text-nightfall",
-  high: "text-nightfall",
-  critical: "text-primary-foreground",
+export const severityChip: Record<SeverityTier, string> = {
+  low: "bg-sev-1 text-nightfall",
+  moderate: "bg-sev-2 text-nightfall",
+  high: "bg-sev-3 text-nightfall",
+  critical: "bg-sev-4 text-primary-foreground",
 };
 
 export const MY_AREA_ZONE_ID = "z-kalyan-east";

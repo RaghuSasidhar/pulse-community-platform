@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   MY_AREA_ZONE_ID,
+  severityChip,
   severityLabel,
   severityToken,
   zones,
@@ -100,7 +101,7 @@ function Dashboard() {
             </p>
             <div className="mt-4 flex items-center gap-3">
               <span
-                className={`inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium text-nightfall ${severityToken[myArea.severity]}`}
+                className={`inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium ${severityChip[myArea.severity]}`}
               >
                 {severityLabel[myArea.severity]}
               </span>
