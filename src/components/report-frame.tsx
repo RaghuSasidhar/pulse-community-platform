@@ -73,7 +73,7 @@ export function ReportFrame({
                 {submitLabel}
               </Button>
               <span className="text-xs text-muted-foreground">
-                Demo submission — stored in this browser session only.
+                Saved to the shared signal database and counted into your area.
               </span>
             </div>
           </CardContent>
