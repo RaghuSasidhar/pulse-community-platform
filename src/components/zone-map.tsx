@@ -17,7 +17,7 @@ function makeRng(seed: number) {
 function scatter(zone: Zone, seed: number) {
   const rng = makeRng(seed);
   const count = 60 + Math.round(zone.severityScore * 3.2);
-  const spread = 0.055 + (zone.severityScore / 100) * 0.05;
+  const spread = 0.018 + (zone.severityScore / 100) * 0.022;
   const points: [number, number, number][] = [];
   for (let i = 0; i < count; i += 1) {
     // Gaussian-ish falloff: dense at the centre, sparse at the fringe.
@@ -27,7 +27,7 @@ function scatter(zone: Zone, seed: number) {
     points.push([
       zone.lat + Math.sin(angle) * dist,
       zone.lng + Math.cos(angle) * dist * 1.25,
-      Math.max(0.15, (zone.severityScore / 100) * (1 - r * 0.7)),
+      Math.max(0.05, (zone.severityScore / 100) * 0.5 * (1 - r * 0.75)),
     ]);
   }
   return points;
@@ -94,8 +94,8 @@ export default function ZoneMap({
     (L as unknown as { heatLayer: (p: unknown, o: unknown) => L.Layer }).heatLayer(
       heatPoints,
       {
-        radius: 26,
-        blur: 22,
+        radius: 20,
+        blur: 18,
         max: 1.0,
         minOpacity: 0.3,
         maxZoom: 12,
