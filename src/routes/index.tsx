@@ -10,9 +10,9 @@ import {
   MY_AREA_ZONE_ID,
   severityChip,
   severityLabel,
-  zones,
 } from "@/data/zones";
 import { usePulse } from "@/lib/pulse-context";
+import { useZones } from "@/lib/zones-context";
 
 const ZoneMap = lazy(() => import("@/components/zone-map"));
 
@@ -38,10 +38,11 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   const { t } = usePulse();
+  const { zones } = useZones();
   const [focusZoneId, setFocusZoneId] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
 
-  const myArea = zones.find((z) => z.id === MY_AREA_ZONE_ID)!;
+  const myArea = zones.find((z) => z.id === MY_AREA_ZONE_ID) ?? zones[0]!;
 
   const handleLocate = () => {
     setLocating(true);
@@ -131,7 +132,7 @@ function Dashboard() {
           <div>
             <ClientOnly fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
               <Suspense fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
-                <ZoneMap focusZoneId={focusZoneId} onSelectZone={setFocusZoneId} height="520px" />
+                <ZoneMap zones={zones} focusZoneId={focusZoneId} onSelectZone={setFocusZoneId} height="520px" />
               </Suspense>
             </ClientOnly>
             <p className="mt-3 text-xs text-muted-foreground">
@@ -140,7 +141,7 @@ function Dashboard() {
               shown here.
             </p>
           </div>
-          <DiseaseAlert zoneId={MY_AREA_ZONE_ID} />
+          <DiseaseAlert zoneId={myArea.id} />
         </div>
       </section>
     </PageShell>

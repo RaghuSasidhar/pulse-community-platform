@@ -4,7 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Activity, AlertTriangle, RefreshCw, ShieldAlert, Sparkles } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { getZone, severityChip, severityLabel } from "@/data/zones";
+import { severityChip, severityLabel } from "@/data/zones";
+import { useZones } from "@/lib/zones-context";
 import { usePulse } from "@/lib/pulse-context";
 import { summarizeZoneSignals } from "@/lib/zone-summary.functions";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,7 @@ function TrendPill({ trend, trendPct }: { trend: string; trendPct: number }) {
 
 /** AI-written signal panel shown beside the heatmap for the selected area. */
 export default function DiseaseAlert({ zoneId }: Props) {
+  const { getZone } = useZones();
   const zone = getZone(zoneId);
   const { reports } = usePulse();
   const summarize = useServerFn(summarizeZoneSignals);

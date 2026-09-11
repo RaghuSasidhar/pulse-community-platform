@@ -13,7 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { K_ANONYMITY_THRESHOLD, severityChip, severityLabel, zones } from "@/data/zones";
+import { K_ANONYMITY_THRESHOLD, severityChip, severityLabel } from "@/data/zones";
+import { useZones } from "@/lib/zones-context";
 
 export const Route = createFileRoute("/officials")({
   head: () => ({
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/officials")({
 });
 
 function Officials() {
+  const { zones } = useZones();
   const anomalies = zones.filter((z) => z.anomalyFlag);
   const withheld = zones.filter((z) => !z.publiclyVisible && !z.anomalyFlag);
   const totalReports = zones.reduce(
