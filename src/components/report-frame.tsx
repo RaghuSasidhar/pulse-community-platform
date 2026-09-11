@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { zones } from "@/data/zones";
+import { useZones } from "@/lib/zones-context";
 
 export function ReportFrame({
   eyebrow,
@@ -36,6 +36,7 @@ export function ReportFrame({
   children: ReactNode;
   aside?: ReactNode;
 }) {
+  const { zones } = useZones();
   return (
     <PageShell>
       <PageHeader eyebrow={eyebrow} title={title} description={description} />
