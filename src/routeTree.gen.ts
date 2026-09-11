@@ -10,33 +10,225 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as OfficialsRouteImport } from './routes/officials'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as AuthenticatedMyReportsRouteImport } from './routes/_authenticated.my-reports'
+import { Route as VerifyRoleRouteImport } from './routes/verify.$role'
+import { Route as ZoneZoneIdRouteImport } from './routes/zone.$zoneId'
+import { Route as AuthenticatedReportCitizenRouteImport } from './routes/_authenticated.report.citizen'
+import { Route as AuthenticatedReportDoctorRouteImport } from './routes/_authenticated.report.doctor'
+import { Route as AuthenticatedReportLabRouteImport } from './routes/_authenticated.report.lab'
+import { Route as AuthenticatedReportPharmacyRouteImport } from './routes/_authenticated.report.pharmacy'
+import { Route as AuthenticatedReportSubmittedRouteImport } from './routes/_authenticated.report.submitted'
+import { Route as AuthenticatedReportVolunteerRouteImport } from './routes/_authenticated.report.volunteer'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfficialsRoute = OfficialsRouteImport.update({
+  id: '/officials',
+  path: '/officials',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedMyReportsRoute = AuthenticatedMyReportsRouteImport.update({
+  id: '/my-reports',
+  path: '/my-reports',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const VerifyRoleRoute = VerifyRoleRouteImport.update({
+  id: '/verify/$role',
+  path: '/verify/$role',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ZoneZoneIdRoute = ZoneZoneIdRouteImport.update({
+  id: '/zone/$zoneId',
+  path: '/zone/$zoneId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedReportCitizenRoute =
+  AuthenticatedReportCitizenRouteImport.update({
+    id: '/report/citizen',
+    path: '/report/citizen',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedReportDoctorRoute =
+  AuthenticatedReportDoctorRouteImport.update({
+    id: '/report/doctor',
+    path: '/report/doctor',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedReportLabRoute = AuthenticatedReportLabRouteImport.update({
+  id: '/report/lab',
+  path: '/report/lab',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedReportPharmacyRoute =
+  AuthenticatedReportPharmacyRouteImport.update({
+    id: '/report/pharmacy',
+    path: '/report/pharmacy',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedReportSubmittedRoute =
+  AuthenticatedReportSubmittedRouteImport.update({
+    id: '/report/submitted',
+    path: '/report/submitted',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedReportVolunteerRoute =
+  AuthenticatedReportVolunteerRouteImport.update({
+    id: '/report/volunteer',
+    path: '/report/volunteer',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
+  '/faq': typeof FaqRoute
+  '/officials': typeof OfficialsRoute
+  '/privacy': typeof PrivacyRoute
+  '/my-reports': typeof AuthenticatedMyReportsRoute
+  '/verify/$role': typeof VerifyRoleRoute
+  '/zone/$zoneId': typeof ZoneZoneIdRoute
+  '/report/citizen': typeof AuthenticatedReportCitizenRoute
+  '/report/doctor': typeof AuthenticatedReportDoctorRoute
+  '/report/lab': typeof AuthenticatedReportLabRoute
+  '/report/pharmacy': typeof AuthenticatedReportPharmacyRoute
+  '/report/submitted': typeof AuthenticatedReportSubmittedRoute
+  '/report/volunteer': typeof AuthenticatedReportVolunteerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
+  '/faq': typeof FaqRoute
+  '/officials': typeof OfficialsRoute
+  '/privacy': typeof PrivacyRoute
+  '/my-reports': typeof AuthenticatedMyReportsRoute
+  '/verify/$role': typeof VerifyRoleRoute
+  '/zone/$zoneId': typeof ZoneZoneIdRoute
+  '/report/citizen': typeof AuthenticatedReportCitizenRoute
+  '/report/doctor': typeof AuthenticatedReportDoctorRoute
+  '/report/lab': typeof AuthenticatedReportLabRoute
+  '/report/pharmacy': typeof AuthenticatedReportPharmacyRoute
+  '/report/submitted': typeof AuthenticatedReportSubmittedRoute
+  '/report/volunteer': typeof AuthenticatedReportVolunteerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/about': typeof AboutRoute
+  '/auth': typeof AuthRoute
+  '/faq': typeof FaqRoute
+  '/officials': typeof OfficialsRoute
+  '/privacy': typeof PrivacyRoute
+  '/_authenticated/my-reports': typeof AuthenticatedMyReportsRoute
+  '/verify/$role': typeof VerifyRoleRoute
+  '/zone/$zoneId': typeof ZoneZoneIdRoute
+  '/_authenticated/report/citizen': typeof AuthenticatedReportCitizenRoute
+  '/_authenticated/report/doctor': typeof AuthenticatedReportDoctorRoute
+  '/_authenticated/report/lab': typeof AuthenticatedReportLabRoute
+  '/_authenticated/report/pharmacy': typeof AuthenticatedReportPharmacyRoute
+  '/_authenticated/report/submitted': typeof AuthenticatedReportSubmittedRoute
+  '/_authenticated/report/volunteer': typeof AuthenticatedReportVolunteerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/auth'
+    | '/faq'
+    | '/officials'
+    | '/privacy'
+    | '/my-reports'
+    | '/verify/$role'
+    | '/zone/$zoneId'
+    | '/report/citizen'
+    | '/report/doctor'
+    | '/report/lab'
+    | '/report/pharmacy'
+    | '/report/submitted'
+    | '/report/volunteer'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/auth'
+    | '/faq'
+    | '/officials'
+    | '/privacy'
+    | '/my-reports'
+    | '/verify/$role'
+    | '/zone/$zoneId'
+    | '/report/citizen'
+    | '/report/doctor'
+    | '/report/lab'
+    | '/report/pharmacy'
+    | '/report/submitted'
+    | '/report/volunteer'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/about'
+    | '/auth'
+    | '/faq'
+    | '/officials'
+    | '/privacy'
+    | '/_authenticated/my-reports'
+    | '/verify/$role'
+    | '/zone/$zoneId'
+    | '/_authenticated/report/citizen'
+    | '/_authenticated/report/doctor'
+    | '/_authenticated/report/lab'
+    | '/_authenticated/report/pharmacy'
+    | '/_authenticated/report/submitted'
+    | '/_authenticated/report/volunteer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AboutRoute: typeof AboutRoute
+  AuthRoute: typeof AuthRoute
+  FaqRoute: typeof FaqRoute
+  OfficialsRoute: typeof OfficialsRoute
+  PrivacyRoute: typeof PrivacyRoute
+  VerifyRoleRoute: typeof VerifyRoleRoute
+  ZoneZoneIdRoute: typeof ZoneZoneIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +240,148 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/officials': {
+      id: '/officials'
+      path: '/officials'
+      fullPath: '/officials'
+      preLoaderRoute: typeof OfficialsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/my-reports': {
+      id: '/_authenticated/my-reports'
+      path: '/my-reports'
+      fullPath: '/my-reports'
+      preLoaderRoute: typeof AuthenticatedMyReportsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/verify/$role': {
+      id: '/verify/$role'
+      path: '/verify/$role'
+      fullPath: '/verify/$role'
+      preLoaderRoute: typeof VerifyRoleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/zone/$zoneId': {
+      id: '/zone/$zoneId'
+      path: '/zone/$zoneId'
+      fullPath: '/zone/$zoneId'
+      preLoaderRoute: typeof ZoneZoneIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/report/citizen': {
+      id: '/_authenticated/report/citizen'
+      path: '/report/citizen'
+      fullPath: '/report/citizen'
+      preLoaderRoute: typeof AuthenticatedReportCitizenRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/report/doctor': {
+      id: '/_authenticated/report/doctor'
+      path: '/report/doctor'
+      fullPath: '/report/doctor'
+      preLoaderRoute: typeof AuthenticatedReportDoctorRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/report/lab': {
+      id: '/_authenticated/report/lab'
+      path: '/report/lab'
+      fullPath: '/report/lab'
+      preLoaderRoute: typeof AuthenticatedReportLabRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/report/pharmacy': {
+      id: '/_authenticated/report/pharmacy'
+      path: '/report/pharmacy'
+      fullPath: '/report/pharmacy'
+      preLoaderRoute: typeof AuthenticatedReportPharmacyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/report/submitted': {
+      id: '/_authenticated/report/submitted'
+      path: '/report/submitted'
+      fullPath: '/report/submitted'
+      preLoaderRoute: typeof AuthenticatedReportSubmittedRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/report/volunteer': {
+      id: '/_authenticated/report/volunteer'
+      path: '/report/volunteer'
+      fullPath: '/report/volunteer'
+      preLoaderRoute: typeof AuthenticatedReportVolunteerRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedMyReportsRoute: typeof AuthenticatedMyReportsRoute
+  AuthenticatedReportCitizenRoute: typeof AuthenticatedReportCitizenRoute
+  AuthenticatedReportDoctorRoute: typeof AuthenticatedReportDoctorRoute
+  AuthenticatedReportLabRoute: typeof AuthenticatedReportLabRoute
+  AuthenticatedReportPharmacyRoute: typeof AuthenticatedReportPharmacyRoute
+  AuthenticatedReportSubmittedRoute: typeof AuthenticatedReportSubmittedRoute
+  AuthenticatedReportVolunteerRoute: typeof AuthenticatedReportVolunteerRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedMyReportsRoute: AuthenticatedMyReportsRoute,
+  AuthenticatedReportCitizenRoute: AuthenticatedReportCitizenRoute,
+  AuthenticatedReportDoctorRoute: AuthenticatedReportDoctorRoute,
+  AuthenticatedReportLabRoute: AuthenticatedReportLabRoute,
+  AuthenticatedReportPharmacyRoute: AuthenticatedReportPharmacyRoute,
+  AuthenticatedReportSubmittedRoute: AuthenticatedReportSubmittedRoute,
+  AuthenticatedReportVolunteerRoute: AuthenticatedReportVolunteerRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AboutRoute: AboutRoute,
+  AuthRoute: AuthRoute,
+  FaqRoute: FaqRoute,
+  OfficialsRoute: OfficialsRoute,
+  PrivacyRoute: PrivacyRoute,
+  VerifyRoleRoute: VerifyRoleRoute,
+  ZoneZoneIdRoute: ZoneZoneIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
