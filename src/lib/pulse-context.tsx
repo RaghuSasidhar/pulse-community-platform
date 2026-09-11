@@ -189,8 +189,24 @@ export function PulseProvider({ children }: { children: ReactNode }) {
         }
         return next;
       });
+
+      // Save to the shared database so the map reflects it for everyone.
+      void submitReport({
+        data: {
+          zoneId: report.zoneId,
+          role: report.role,
+          title: report.title,
+          details: report.details,
+        },
+      })
+        .then(() => {
+          void queryClient.invalidateQueries({ queryKey: ["zones"] });
+        })
+        .catch(() => {
+          toast.error("Saved locally, but we could not reach the server.");
+        });
     },
-    [],
+    [queryClient],
   );
 
   const setLanguage = useCallback((lang: Language) => {
