@@ -7,7 +7,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { MY_AREA_ZONE_ID, getZone } from "@/data/zones";
+import { MY_AREA_ZONE_ID } from "@/data/zones";
+import { useZones } from "@/lib/zones-context";
 import { usePulse } from "@/lib/pulse-context";
 
 export const Route = createFileRoute("/_authenticated/report/volunteer")({
@@ -48,6 +49,7 @@ const counts = [
 
 function VolunteerReport() {
   const { addReport } = usePulse();
+  const { getZone } = useZones();
   const navigate = useNavigate();
   const [zoneId, setZoneId] = useState(MY_AREA_ZONE_ID);
   const [checked, setChecked] = useState<string[]>([]);

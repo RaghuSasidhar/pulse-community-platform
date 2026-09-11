@@ -7,7 +7,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
-import { MY_AREA_ZONE_ID, getZone } from "@/data/zones";
+import { MY_AREA_ZONE_ID } from "@/data/zones";
+import { useZones } from "@/lib/zones-context";
 import { usePulse } from "@/lib/pulse-context";
 
 export const Route = createFileRoute("/_authenticated/report/citizen")({
@@ -46,6 +47,7 @@ const severityWords = ["Very mild", "Mild", "Noticeable", "Severe", "Very severe
 
 function CitizenReport() {
   const { addReport } = usePulse();
+  const { getZone } = useZones();
   const navigate = useNavigate();
   const [zoneId, setZoneId] = useState(MY_AREA_ZONE_ID);
   const [selected, setSelected] = useState<Record<string, number>>({});

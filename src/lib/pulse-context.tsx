@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import {
   createContext,
   useCallback,
@@ -7,6 +8,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { toast } from "sonner";
+
+import { submitReport } from "@/lib/pulse-data.functions";
 
 export type Role = "citizen" | "doctor" | "volunteer" | "lab" | "pharmacy";
 
@@ -133,6 +137,7 @@ const dictionary: Record<Language, Record<string, string>> = {
 };
 
 export function PulseProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
   const [hydrated, setHydrated] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [reports, setReports] = useState<SubmittedReport[]>([]);
@@ -189,8 +194,24 @@ export function PulseProvider({ children }: { children: ReactNode }) {
         }
         return next;
       });
+
+      // Save to the shared database so the map reflects it for everyone.
+      void submitReport({
+        data: {
+          zoneId: report.zoneId,
+          role: report.role,
+          title: report.title,
+          details: report.details,
+        },
+      })
+        .then(() => {
+          void queryClient.invalidateQueries({ queryKey: ["zones"] });
+        })
+        .catch(() => {
+          toast.error("Saved locally, but we could not reach the server.");
+        });
     },
-    [],
+    [queryClient],
   );
 
   const setLanguage = useCallback((lang: Language) => {

@@ -6,11 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { getZone, severityChip, severityLabel } from "@/data/zones";
+import { severityChip, severityLabel } from "@/data/zones";
+import { zonesQueryOptions } from "@/lib/zones-context";
 
 export const Route = createFileRoute("/zone/$zoneId")({
-  loader: ({ params }) => {
-    const zone = getZone(params.zoneId);
+  loader: async ({ params, context }) => {
+    const zones = await context.queryClient.ensureQueryData(zonesQueryOptions);
+    const zone = zones.find((z) => z.id === params.zoneId);
     if (!zone) throw notFound();
     return { zone };
   },

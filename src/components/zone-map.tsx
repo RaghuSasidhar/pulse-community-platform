@@ -2,7 +2,7 @@ import L from "leaflet";
 import "leaflet.heat";
 import { useEffect, useRef } from "react";
 
-import { zones, type Zone } from "@/data/zones";
+import type { Zone } from "@/data/zones";
 
 // Deterministic pseudo-random so server/client and reloads agree.
 function makeRng(seed: number) {
@@ -52,6 +52,7 @@ function countBubble(zone: Zone) {
 }
 
 type Props = {
+  zones: Zone[];
   center?: [number, number];
   focusZoneId?: string | null;
   onSelectZone?: (zoneId: string) => void;
@@ -59,7 +60,8 @@ type Props = {
 };
 
 export default function ZoneMap({
-  center = [19.22, 73.1],
+  zones,
+  center = [16.5, 80.65],
   focusZoneId = null,
   onSelectZone,
   height = "480px",
@@ -68,6 +70,8 @@ export default function ZoneMap({
   const mapRef = useRef<L.Map | null>(null);
   const selectRef = useRef(onSelectZone);
   selectRef.current = onSelectZone;
+  const zonesRef = useRef(zones);
+  zonesRef.current = zones;
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -127,7 +131,7 @@ export default function ZoneMap({
 
   useEffect(() => {
     if (!mapRef.current || !focusZoneId) return;
-    const zone = zones.find((z) => z.id === focusZoneId);
+    const zone = zonesRef.current.find((z) => z.id === focusZoneId);
     if (zone) mapRef.current.flyTo([zone.lat, zone.lng], 13, { duration: 0.8 });
   }, [focusZoneId]);
 

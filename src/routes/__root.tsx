@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { PulseProvider } from "../lib/pulse-context";
+import { ZonesProvider, zonesQueryOptions } from "../lib/zones-context";
 import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
@@ -75,6 +76,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: ({ context }) => context.queryClient.ensureQueryData(zonesQueryOptions),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -129,8 +131,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <PulseProvider>
-        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <Outlet />
+        <ZonesProvider>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </ZonesProvider>
         <Toaster position="top-center" />
       </PulseProvider>
     </QueryClientProvider>

@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.bump_zone_on_report() FROM PUBLIC, anon, authenticated;
