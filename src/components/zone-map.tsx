@@ -4,12 +4,52 @@ import { useEffect, useRef } from "react";
 
 import { zones, type Zone } from "@/data/zones";
 
-const severityColor: Record<Zone["severity"], string> = {
-  low: "#CDD6EE",
-  moderate: "#D6CDEE",
-  high: "#E6CDEE",
-  critical: "#1E42AC",
-};
+// Deterministic pseudo-random so server/client and reloads agree.
+function makeRng(seed: number) {
+  let s = seed || 1;
+  return () => {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  };
+}
+
+/** Scatter a cloud of weighted points around a zone centre. */
+function scatter(zone: Zone, seed: number) {
+  const rng = makeRng(seed);
+  const count = 60 + Math.round(zone.severityScore * 3.2);
+  const spread = 0.055 + (zone.severityScore / 100) * 0.05;
+  const points: [number, number, number][] = [];
+  for (let i = 0; i < count; i += 1) {
+    // Gaussian-ish falloff: dense at the centre, sparse at the fringe.
+    const r = (rng() + rng() + rng()) / 3;
+    const angle = rng() * Math.PI * 2;
+    const dist = Math.pow(r, 1.6) * spread;
+    points.push([
+      zone.lat + Math.sin(angle) * dist,
+      zone.lng + Math.cos(angle) * dist * 1.25,
+      Math.max(0.15, (zone.severityScore / 100) * (1 - r * 0.7)),
+    ]);
+  }
+  return points;
+}
+
+function countBubble(zone: Zone) {
+  const total = zone.severityScore * 4 + 12;
+  const size = total > 250 ? 46 : total > 120 ? 38 : 30;
+  return L.divIcon({
+    className: "pulse-count-bubble",
+    html: `<span style="
+      display:flex;align-items:center;justify-content:center;
+      width:${size}px;height:${size}px;border-radius:9999px;
+      background:rgba(11,23,61,.55);color:#fff;
+      font:600 ${size > 40 ? 13 : 12}px ui-sans-serif,system-ui;
+      border:1.5px solid rgba(255,255,255,.65);
+      box-shadow:0 2px 10px rgba(11,23,61,.35);
+    ">${total}</span>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+  });
+}
 
 type Props = {
   center?: [number, number];
@@ -43,40 +83,35 @@ export default function ZoneMap({
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; OpenStreetMap contributors",
       maxZoom: 19,
-      opacity: 0.85,
+      opacity: 0.9,
     }).addTo(map);
 
     const visible = zones.filter((z) => z.publiclyVisible);
 
-    const heatPoints = visible.map(
-      (z) => [z.lat, z.lng, z.severityScore / 100] as [number, number, number],
-    );
+    const heatPoints = visible.flatMap((z, i) => scatter(z, i * 7919 + 13));
+
     // leaflet.heat augments L at runtime
     (L as unknown as { heatLayer: (p: unknown, o: unknown) => L.Layer }).heatLayer(
       heatPoints,
       {
-        radius: 55,
-        blur: 38,
-        minOpacity: 0.45,
-        maxZoom: 13,
+        radius: 26,
+        blur: 22,
+        max: 1.0,
+        minOpacity: 0.3,
+        maxZoom: 12,
         gradient: {
-          0.2: "#CDD6EE",
-          0.45: "#D6CDEE",
-          0.65: "#E6CDEE",
-          0.85: "#1E42AC",
-          1.0: "#0B173D",
+          0.0: "#2b6cff",
+          0.25: "#31d2f2",
+          0.45: "#3ddc4a",
+          0.62: "#e8e337",
+          0.78: "#f79626",
+          1.0: "#e2231a",
         },
       },
     ).addTo(map);
 
     visible.forEach((z) => {
-      const marker = L.circleMarker([z.lat, z.lng], {
-        radius: 9,
-        color: "#0B173D",
-        weight: 1.5,
-        fillColor: severityColor[z.severity],
-        fillOpacity: 0.95,
-      }).addTo(map);
+      const marker = L.marker([z.lat, z.lng], { icon: countBubble(z) }).addTo(map);
       marker.bindTooltip(`${z.name} — ${z.severity} (${z.severityScore})`, {
         direction: "top",
       });
