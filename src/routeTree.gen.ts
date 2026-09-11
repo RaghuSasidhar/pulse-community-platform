@@ -19,6 +19,10 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as VerifyRoleRouteImport } from './routes/verify.$role'
 import { Route as ZoneZoneIdRouteImport } from './routes/zone.$zoneId'
 import { Route as AuthenticatedReportCitizenRouteImport } from './routes/_authenticated.report.citizen'
+import { Route as AuthenticatedReportDoctorRouteImport } from './routes/_authenticated.report.doctor'
+import { Route as AuthenticatedReportLabRouteImport } from './routes/_authenticated.report.lab'
+import { Route as AuthenticatedReportPharmacyRouteImport } from './routes/_authenticated.report.pharmacy'
+import { Route as AuthenticatedReportVolunteerRouteImport } from './routes/_authenticated.report.volunteer'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -70,6 +74,29 @@ const AuthenticatedReportCitizenRoute =
     path: '/report/citizen',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedReportDoctorRoute =
+  AuthenticatedReportDoctorRouteImport.update({
+    id: '/report/doctor',
+    path: '/report/doctor',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedReportLabRoute = AuthenticatedReportLabRouteImport.update({
+  id: '/report/lab',
+  path: '/report/lab',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedReportPharmacyRoute =
+  AuthenticatedReportPharmacyRouteImport.update({
+    id: '/report/pharmacy',
+    path: '/report/pharmacy',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedReportVolunteerRoute =
+  AuthenticatedReportVolunteerRouteImport.update({
+    id: '/report/volunteer',
+    path: '/report/volunteer',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -81,6 +108,10 @@ export interface FileRoutesByFullPath {
   '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
   '/report/citizen': typeof AuthenticatedReportCitizenRoute
+  '/report/doctor': typeof AuthenticatedReportDoctorRoute
+  '/report/lab': typeof AuthenticatedReportLabRoute
+  '/report/pharmacy': typeof AuthenticatedReportPharmacyRoute
+  '/report/volunteer': typeof AuthenticatedReportVolunteerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -92,6 +123,10 @@ export interface FileRoutesByTo {
   '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
   '/report/citizen': typeof AuthenticatedReportCitizenRoute
+  '/report/doctor': typeof AuthenticatedReportDoctorRoute
+  '/report/lab': typeof AuthenticatedReportLabRoute
+  '/report/pharmacy': typeof AuthenticatedReportPharmacyRoute
+  '/report/volunteer': typeof AuthenticatedReportVolunteerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -105,6 +140,10 @@ export interface FileRoutesById {
   '/verify/$role': typeof VerifyRoleRoute
   '/zone/$zoneId': typeof ZoneZoneIdRoute
   '/_authenticated/report/citizen': typeof AuthenticatedReportCitizenRoute
+  '/_authenticated/report/doctor': typeof AuthenticatedReportDoctorRoute
+  '/_authenticated/report/lab': typeof AuthenticatedReportLabRoute
+  '/_authenticated/report/pharmacy': typeof AuthenticatedReportPharmacyRoute
+  '/_authenticated/report/volunteer': typeof AuthenticatedReportVolunteerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -118,6 +157,10 @@ export interface FileRouteTypes {
     | '/verify/$role'
     | '/zone/$zoneId'
     | '/report/citizen'
+    | '/report/doctor'
+    | '/report/lab'
+    | '/report/pharmacy'
+    | '/report/volunteer'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -129,6 +172,10 @@ export interface FileRouteTypes {
     | '/verify/$role'
     | '/zone/$zoneId'
     | '/report/citizen'
+    | '/report/doctor'
+    | '/report/lab'
+    | '/report/pharmacy'
+    | '/report/volunteer'
   id:
     | '__root__'
     | '/'
@@ -141,6 +188,10 @@ export interface FileRouteTypes {
     | '/verify/$role'
     | '/zone/$zoneId'
     | '/_authenticated/report/citizen'
+    | '/_authenticated/report/doctor'
+    | '/_authenticated/report/lab'
+    | '/_authenticated/report/pharmacy'
+    | '/_authenticated/report/volunteer'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -227,15 +278,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportCitizenRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/report/doctor': {
+      id: '/_authenticated/report/doctor'
+      path: '/report/doctor'
+      fullPath: '/report/doctor'
+      preLoaderRoute: typeof AuthenticatedReportDoctorRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/report/lab': {
+      id: '/_authenticated/report/lab'
+      path: '/report/lab'
+      fullPath: '/report/lab'
+      preLoaderRoute: typeof AuthenticatedReportLabRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/report/pharmacy': {
+      id: '/_authenticated/report/pharmacy'
+      path: '/report/pharmacy'
+      fullPath: '/report/pharmacy'
+      preLoaderRoute: typeof AuthenticatedReportPharmacyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/report/volunteer': {
+      id: '/_authenticated/report/volunteer'
+      path: '/report/volunteer'
+      fullPath: '/report/volunteer'
+      preLoaderRoute: typeof AuthenticatedReportVolunteerRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
   AuthenticatedReportCitizenRoute: typeof AuthenticatedReportCitizenRoute
+  AuthenticatedReportDoctorRoute: typeof AuthenticatedReportDoctorRoute
+  AuthenticatedReportLabRoute: typeof AuthenticatedReportLabRoute
+  AuthenticatedReportPharmacyRoute: typeof AuthenticatedReportPharmacyRoute
+  AuthenticatedReportVolunteerRoute: typeof AuthenticatedReportVolunteerRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedReportCitizenRoute: AuthenticatedReportCitizenRoute,
+  AuthenticatedReportDoctorRoute: AuthenticatedReportDoctorRoute,
+  AuthenticatedReportLabRoute: AuthenticatedReportLabRoute,
+  AuthenticatedReportPharmacyRoute: AuthenticatedReportPharmacyRoute,
+  AuthenticatedReportVolunteerRoute: AuthenticatedReportVolunteerRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
