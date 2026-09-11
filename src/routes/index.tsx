@@ -1,19 +1,15 @@
 import { ClientOnly, Link, createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, Crosshair, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { ArrowUpRight, Crosshair } from "lucide-react";
 import { Suspense, lazy, useState } from "react";
 
 import { PageShell } from "@/components/page-shell";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   MY_AREA_ZONE_ID,
   severityChip,
   severityLabel,
-  severityToken,
   zones,
-  type Zone,
 } from "@/data/zones";
 import { usePulse } from "@/lib/pulse-context";
 
@@ -39,18 +35,11 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-function TrendIcon({ trend }: { trend: Zone["trend"] }) {
-  if (trend === "rising") return <TrendingUp className="size-4" />;
-  if (trend === "falling") return <TrendingDown className="size-4" />;
-  return <Minus className="size-4" />;
-}
-
 function Dashboard() {
   const { t } = usePulse();
   const [focusZoneId, setFocusZoneId] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
 
-  const publicZones = zones.filter((z) => z.publiclyVisible);
   const myArea = zones.find((z) => z.id === MY_AREA_ZONE_ID)!;
 
   const handleLocate = () => {
