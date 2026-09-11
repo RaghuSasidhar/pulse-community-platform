@@ -122,9 +122,35 @@ function Dashboard() {
       </section>
 
       <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6">
-        <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-          <div>
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold">Live severity heatmap</h2>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>{t("dash.legend")}:</span>
+            <span>{severityLabel.low}</span>
+            <span
+              className="h-3 w-28 rounded-full"
+              style={{
+                background:
+                  "linear-gradient(90deg,#2b6cff,#31d2f2,#3ddc4a,#e8e337,#f79626,#e2231a)",
+              }}
+            />
+            <span>{severityLabel.critical}</span>
+          </div>
+        </div>
+        <ClientOnly fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
+            <ZoneMap focusZoneId={focusZoneId} onSelectZone={setFocusZoneId} height="520px" />
+          </Suspense>
+        </ClientOnly>
+        <p className="mt-3 text-xs text-muted-foreground">
+          Colour intensity reflects computed severity, not raw report volume.
+          Zones below the privacy threshold or under anomaly review are not
+          shown here.
+        </p>
+      </section>
+    </PageShell>
+  );
+}
               <h2 className="text-lg font-semibold">Live severity heatmap</h2>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span>{t("dash.legend")}:</span>
