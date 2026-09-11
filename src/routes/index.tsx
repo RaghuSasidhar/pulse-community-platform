@@ -126,14 +126,17 @@ function Dashboard() {
           <div>
             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
               <h2 className="text-lg font-semibold">Live severity heatmap</h2>
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span>{t("dash.legend")}:</span>
-                {(["low", "moderate", "high", "critical"] as const).map((s) => (
-                  <span key={s} className="flex items-center gap-1.5">
-                    <span className={`size-3 rounded-sm ${severityToken[s]}`} />
-                    {severityLabel[s]}
-                  </span>
-                ))}
+                <span>{severityLabel.low}</span>
+                <span
+                  className="h-3 w-28 rounded-full"
+                  style={{
+                    background:
+                      "linear-gradient(90deg,#2b6cff,#31d2f2,#3ddc4a,#e8e337,#f79626,#e2231a)",
+                  }}
+                />
+                <span>{severityLabel.critical}</span>
               </div>
             </div>
             <ClientOnly fallback={<Skeleton className="h-[480px] w-full rounded-xl" />}>
