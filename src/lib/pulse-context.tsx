@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import {
   createContext,
   useCallback,
@@ -7,6 +8,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { toast } from "sonner";
+
+import { submitReport } from "@/lib/pulse-data.functions";
 
 export type Role = "citizen" | "doctor" | "volunteer" | "lab" | "pharmacy";
 
@@ -133,6 +137,7 @@ const dictionary: Record<Language, Record<string, string>> = {
 };
 
 export function PulseProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
   const [hydrated, setHydrated] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [reports, setReports] = useState<SubmittedReport[]>([]);
