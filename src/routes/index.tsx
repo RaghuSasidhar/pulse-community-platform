@@ -1,19 +1,15 @@
 import { ClientOnly, Link, createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, Crosshair, TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { ArrowUpRight, Crosshair } from "lucide-react";
 import { Suspense, lazy, useState } from "react";
 
 import { PageShell } from "@/components/page-shell";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   MY_AREA_ZONE_ID,
   severityChip,
   severityLabel,
-  severityToken,
   zones,
-  type Zone,
 } from "@/data/zones";
 import { usePulse } from "@/lib/pulse-context";
 
@@ -39,18 +35,11 @@ export const Route = createFileRoute("/")({
   component: Dashboard,
 });
 
-function TrendIcon({ trend }: { trend: Zone["trend"] }) {
-  if (trend === "rising") return <TrendingUp className="size-4" />;
-  if (trend === "falling") return <TrendingDown className="size-4" />;
-  return <Minus className="size-4" />;
-}
-
 function Dashboard() {
   const { t } = usePulse();
   const [focusZoneId, setFocusZoneId] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
 
-  const publicZones = zones.filter((z) => z.publiclyVisible);
   const myArea = zones.find((z) => z.id === MY_AREA_ZONE_ID)!;
 
   const handleLocate = () => {
@@ -122,91 +111,31 @@ function Dashboard() {
       </section>
 
       <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6">
-        <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-          <div>
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-lg font-semibold">Live severity heatmap</h2>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span>{t("dash.legend")}:</span>
-                <span>{severityLabel.low}</span>
-                <span
-                  className="h-3 w-28 rounded-full"
-                  style={{
-                    background:
-                      "linear-gradient(90deg,#2b6cff,#31d2f2,#3ddc4a,#e8e337,#f79626,#e2231a)",
-                  }}
-                />
-                <span>{severityLabel.critical}</span>
-              </div>
-            </div>
-            <ClientOnly fallback={<Skeleton className="h-[480px] w-full rounded-xl" />}>
-              <Suspense fallback={<Skeleton className="h-[480px] w-full rounded-xl" />}>
-                <ZoneMap focusZoneId={focusZoneId} onSelectZone={setFocusZoneId} />
-              </Suspense>
-            </ClientOnly>
-            <p className="mt-3 text-xs text-muted-foreground">
-              Colour intensity reflects computed severity, not raw report volume.
-              Zones below the privacy threshold or under anomaly review are not
-              shown here.
-            </p>
-          </div>
-
-          <div>
-            <h2 className="mb-3 text-lg font-semibold">
-              {t("dash.zones")} ({publicZones.length})
-            </h2>
-            <div className="space-y-3">
-              {publicZones
-                .slice()
-                .sort((a, b) => b.severityScore - a.severityScore)
-                .map((zone) => (
-                  <Card
-                    key={zone.id}
-                    className="cursor-pointer transition-shadow hover:shadow-md"
-                    onClick={() => setFocusZoneId(zone.id)}
-                  >
-                    <CardContent className="flex items-start gap-4 p-4">
-                      <span
-                        className={`mt-1 size-3 shrink-0 rounded-full ${severityToken[zone.severity]}`}
-                      />
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="truncate font-medium">{zone.name}</p>
-                          <Badge variant="secondary" className="numeral shrink-0">
-                            {zone.severityScore}
-                          </Badge>
-                        </div>
-                        <p className="mt-0.5 text-xs text-muted-foreground">
-                          {zone.district} · {severityLabel[zone.severity]}
-                        </p>
-                        <p className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
-                          <TrendIcon trend={zone.trend} />
-                          <span className="numeral">
-                            {zone.trendPct > 0 ? "+" : ""}
-                            {zone.trendPct}% this week
-                          </span>
-                        </p>
-                        <div className="mt-2 flex flex-wrap gap-1.5">
-                          {zone.topSignals.slice(0, 2).map((s) => (
-                            <Badge key={s.label} variant="outline" className="text-[11px]">
-                              {s.label} · {s.count}
-                            </Badge>
-                          ))}
-                        </div>
-                        <Link
-                          to="/zone/$zoneId"
-                          params={{ zoneId: zone.id }}
-                          className="mt-3 inline-flex items-center text-xs font-medium text-primary"
-                        >
-                          View detail <ArrowUpRight className="ml-1 size-3" />
-                        </Link>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-            </div>
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold">Live severity heatmap</h2>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>{t("dash.legend")}:</span>
+            <span>{severityLabel.low}</span>
+            <span
+              className="h-3 w-28 rounded-full"
+              style={{
+                background:
+                  "linear-gradient(90deg,#2b6cff,#31d2f2,#3ddc4a,#e8e337,#f79626,#e2231a)",
+              }}
+            />
+            <span>{severityLabel.critical}</span>
           </div>
         </div>
+        <ClientOnly fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
+          <Suspense fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
+            <ZoneMap focusZoneId={focusZoneId} onSelectZone={setFocusZoneId} height="520px" />
+          </Suspense>
+        </ClientOnly>
+        <p className="mt-3 text-xs text-muted-foreground">
+          Colour intensity reflects computed severity, not raw report volume.
+          Zones below the privacy threshold or under anomaly review are not
+          shown here.
+        </p>
       </section>
     </PageShell>
   );
