@@ -69,6 +69,7 @@ export const summarizeZoneSignals = createServerFn({ method: "POST" })
       });
       return await result.output;
     } catch (error) {
+      console.error("AI summary failure", error);
       if (NoObjectGeneratedError.isInstance(error)) {
         throw new Error("The AI summary could not be generated. Please try again.");
       }
