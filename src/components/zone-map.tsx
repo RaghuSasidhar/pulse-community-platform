@@ -131,7 +131,7 @@ export default function ZoneMap({
 
   useEffect(() => {
     if (!mapRef.current || !focusZoneId) return;
-    const zone = zones.find((z) => z.id === focusZoneId);
+    const zone = zonesRef.current.find((z) => z.id === focusZoneId);
     if (zone) mapRef.current.flyTo([zone.lat, zone.lng], 13, { duration: 0.8 });
   }, [focusZoneId]);
 

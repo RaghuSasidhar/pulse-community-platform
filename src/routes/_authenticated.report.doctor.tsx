@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { MY_AREA_ZONE_ID, getZone } from "@/data/zones";
+import { MY_AREA_ZONE_ID } from "@/data/zones";
+import { useZones } from "@/lib/zones-context";
 import { usePulse } from "@/lib/pulse-context";
 
 export const Route = createFileRoute("/_authenticated/report/doctor")({
@@ -88,6 +89,7 @@ const subtypes: {
 
 function DoctorReport() {
   const { addReport } = usePulse();
+  const { getZone } = useZones();
   const navigate = useNavigate();
   const [zoneId, setZoneId] = useState(MY_AREA_ZONE_ID);
   const [subtype, setSubtype] = useState(subtypes[0]!.id);
