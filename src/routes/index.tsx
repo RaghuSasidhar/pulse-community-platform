@@ -2,6 +2,7 @@ import { ClientOnly, Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowUpRight, Crosshair } from "lucide-react";
 import { Suspense, lazy, useState } from "react";
 
+import DiseaseAlert from "@/components/disease-alert";
 import { PageShell } from "@/components/page-shell";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -126,16 +127,21 @@ function Dashboard() {
             <span>{severityLabel.critical}</span>
           </div>
         </div>
-        <ClientOnly fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
-          <Suspense fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
-            <ZoneMap focusZoneId={focusZoneId} onSelectZone={setFocusZoneId} height="520px" />
-          </Suspense>
-        </ClientOnly>
-        <p className="mt-3 text-xs text-muted-foreground">
-          Colour intensity reflects computed severity, not raw report volume.
-          Zones below the privacy threshold or under anomaly review are not
-          shown here.
-        </p>
+        <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
+          <div>
+            <ClientOnly fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
+              <Suspense fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
+                <ZoneMap focusZoneId={focusZoneId} onSelectZone={setFocusZoneId} height="520px" />
+              </Suspense>
+            </ClientOnly>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Colour intensity reflects computed severity, not raw report volume.
+              Zones below the privacy threshold or under anomaly review are not
+              shown here.
+            </p>
+          </div>
+          <DiseaseAlert zoneId={MY_AREA_ZONE_ID} />
+        </div>
       </section>
     </PageShell>
   );
