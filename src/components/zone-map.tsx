@@ -40,13 +40,11 @@ export default function ZoneMap({
     });
     mapRef.current = map;
 
-    L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-      {
-        attribution: "&copy; OpenStreetMap &copy; CARTO",
-        maxZoom: 19,
-      },
-    ).addTo(map);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+      maxZoom: 19,
+      opacity: 0.85,
+    }).addTo(map);
 
     const visible = zones.filter((z) => z.publiclyVisible);
 
@@ -57,8 +55,9 @@ export default function ZoneMap({
     (L as unknown as { heatLayer: (p: unknown, o: unknown) => L.Layer }).heatLayer(
       heatPoints,
       {
-        radius: 45,
-        blur: 32,
+        radius: 55,
+        blur: 38,
+        minOpacity: 0.45,
         maxZoom: 13,
         gradient: {
           0.2: "#CDD6EE",
