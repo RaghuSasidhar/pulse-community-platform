@@ -176,8 +176,20 @@ export default function ZoneMap({
   useEffect(() => {
     if (!mapRef.current || !focusZoneId) return;
     const zone = zonesRef.current.find((z) => z.id === focusZoneId);
-    if (zone) mapRef.current.flyTo([zone.lat, zone.lng], 13, { duration: 0.8 });
+    if (zone) mapRef.current.flyTo([zone.lat, zone.lng], 12, { duration: 0.8 });
   }, [focusZoneId]);
+
+  // "You are here" dot, kept in sync with the browser's location.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !userPosition) return;
+    const marker = L.marker(userPosition, { icon: userIcon(), zIndexOffset: 900 })
+      .addTo(map)
+      .bindTooltip("You are here", { direction: "top" });
+    return () => {
+      marker.remove();
+    };
+  }, [userPosition?.[0], userPosition?.[1]]);
 
   return (
     <div
