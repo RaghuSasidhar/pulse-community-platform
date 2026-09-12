@@ -94,7 +94,7 @@ function Dashboard() {
               <Button
                 size="lg"
                 variant="outline"
-                onClick={handleLocate}
+                onClick={request}
                 className="border-white/25 bg-transparent text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
               >
                 <Crosshair className="mr-2 size-4" />
@@ -123,6 +123,12 @@ function Dashboard() {
               </span>
             </div>
             <p className="mt-4 text-sm opacity-80">{myArea.summary}</p>
+            {locationNote ? (
+              <p className="mt-3 flex items-start gap-2 text-xs opacity-70">
+                <MapPin className="mt-0.5 size-3.5 shrink-0" />
+                {locationNote}
+              </p>
+            ) : null}
             <Button asChild variant="secondary" size="sm" className="mt-4">
               <Link to="/zone/$zoneId" params={{ zoneId: myArea.id }}>
                 Open zone detail
