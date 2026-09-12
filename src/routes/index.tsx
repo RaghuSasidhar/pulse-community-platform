@@ -43,17 +43,35 @@ function Dashboard() {
   const { t } = usePulse();
   const { zones } = useZones();
   const [focusZoneId, setFocusZoneId] = useState<string | null>(null);
-  const [locating, setLocating] = useState(false);
+  const { coords, status, request } = useMyLocation();
 
-  const myArea = zones.find((z) => z.id === MY_AREA_ZONE_ID) ?? zones[0]!;
+  const nearest = useMemo(() => {
+    if (!coords || !zones.length) return null;
+    const ranked = zones
+      .map((z) => ({ zone: z, km: distanceKm(coords, z) }))
+      .sort((a, b) => a.km - b.km);
+    return ranked[0]!;
+  }, [coords, zones]);
 
-  const handleLocate = () => {
-    setLocating(true);
-    setTimeout(() => {
-      setFocusZoneId(MY_AREA_ZONE_ID);
-      setLocating(false);
-    }, 600);
-  };
+  const myArea =
+    nearest?.zone ?? zones.find((z) => z.id === MY_AREA_ZONE_ID) ?? zones[0]!;
+
+  // Centre the map on the visitor as soon as we know where they are.
+  useEffect(() => {
+    if (nearest) setFocusZoneId(nearest.zone.id);
+  }, [nearest]);
+
+  const locating = status === "asking";
+  const locationNote =
+    status === "granted" && nearest
+      ? `Using your location · nearest monitored area is ${nearest.km < 1 ? "under 1" : Math.round(nearest.km)} km away`
+      : status === "denied"
+        ? "Location permission was blocked, so we are showing a default area. Allow location in your browser to see your own."
+        : status === "unsupported" || status === "error"
+          ? "We could not read your location, so we are showing a default area."
+          : locating
+            ? "Asking your browser for permission to use your location…"
+            : null;
 
   return (
     <PageShell>
