@@ -1,6 +1,6 @@
 import { ClientOnly, Link, createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, Crosshair } from "lucide-react";
-import { Suspense, lazy, useState } from "react";
+import { ArrowUpRight, Crosshair, MapPin } from "lucide-react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 
 import DiseaseAlert from "@/components/disease-alert";
 import { PageShell } from "@/components/page-shell";
@@ -8,10 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   MY_AREA_ZONE_ID,
+  distanceKm,
   severityChip,
   severityLabel,
+  severityOrder,
 } from "@/data/zones";
 import { usePulse } from "@/lib/pulse-context";
+import { useMyLocation } from "@/lib/use-my-location";
 import { useZones } from "@/lib/zones-context";
 
 const ZoneMap = lazy(() => import("@/components/zone-map"));
@@ -40,17 +43,35 @@ function Dashboard() {
   const { t } = usePulse();
   const { zones } = useZones();
   const [focusZoneId, setFocusZoneId] = useState<string | null>(null);
-  const [locating, setLocating] = useState(false);
+  const { coords, status, request } = useMyLocation();
 
-  const myArea = zones.find((z) => z.id === MY_AREA_ZONE_ID) ?? zones[0]!;
+  const nearest = useMemo(() => {
+    if (!coords || !zones.length) return null;
+    const ranked = zones
+      .map((z) => ({ zone: z, km: distanceKm(coords, z) }))
+      .sort((a, b) => a.km - b.km);
+    return ranked[0]!;
+  }, [coords, zones]);
 
-  const handleLocate = () => {
-    setLocating(true);
-    setTimeout(() => {
-      setFocusZoneId(MY_AREA_ZONE_ID);
-      setLocating(false);
-    }, 600);
-  };
+  const myArea =
+    nearest?.zone ?? zones.find((z) => z.id === MY_AREA_ZONE_ID) ?? zones[0]!;
+
+  // Centre the map on the visitor as soon as we know where they are.
+  useEffect(() => {
+    if (nearest) setFocusZoneId(nearest.zone.id);
+  }, [nearest]);
+
+  const locating = status === "asking";
+  const locationNote =
+    status === "granted" && nearest
+      ? `Using your location · nearest monitored area is ${nearest.km < 1 ? "under 1" : Math.round(nearest.km)} km away`
+      : status === "denied"
+        ? "Location permission was blocked, so we are showing a default area. Allow location in your browser to see your own."
+        : status === "unsupported" || status === "error"
+          ? "We could not read your location, so we are showing a default area."
+          : locating
+            ? "Asking your browser for permission to use your location…"
+            : null;
 
   return (
     <PageShell>
@@ -73,7 +94,7 @@ function Dashboard() {
               <Button
                 size="lg"
                 variant="outline"
-                onClick={handleLocate}
+                onClick={request}
                 className="border-white/25 bg-transparent text-primary-foreground hover:bg-white/10 hover:text-primary-foreground"
               >
                 <Crosshair className="mr-2 size-4" />
@@ -102,6 +123,12 @@ function Dashboard() {
               </span>
             </div>
             <p className="mt-4 text-sm opacity-80">{myArea.summary}</p>
+            {locationNote ? (
+              <p className="mt-3 flex items-start gap-2 text-xs opacity-70">
+                <MapPin className="mt-0.5 size-3.5 shrink-0" />
+                {locationNote}
+              </p>
+            ) : null}
             <Button asChild variant="secondary" size="sm" className="mt-4">
               <Link to="/zone/$zoneId" params={{ zoneId: myArea.id }}>
                 Open zone detail
@@ -115,24 +142,29 @@ function Dashboard() {
       <section className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold">Live severity heatmap</h2>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
             <span>{t("dash.legend")}:</span>
-            <span>{severityLabel.low}</span>
-            <span
-              className="h-3 w-28 rounded-full"
-              style={{
-                background:
-                  "linear-gradient(90deg,#2b6cff,#31d2f2,#3ddc4a,#e8e337,#f79626,#e2231a)",
-              }}
-            />
-            <span>{severityLabel.critical}</span>
+            {severityOrder.map((tier) => (
+              <span
+                key={tier}
+                className={`inline-flex items-center rounded-md px-2 py-0.5 font-medium ${severityChip[tier]}`}
+              >
+                {severityLabel[tier]}
+              </span>
+            ))}
           </div>
         </div>
         <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
           <div>
             <ClientOnly fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
               <Suspense fallback={<Skeleton className="h-[520px] w-full rounded-xl" />}>
-                <ZoneMap zones={zones} focusZoneId={focusZoneId} onSelectZone={setFocusZoneId} height="520px" />
+                <ZoneMap
+                  zones={zones}
+                  focusZoneId={focusZoneId}
+                  onSelectZone={setFocusZoneId}
+                  {...(coords ? { userPosition: [coords.lat, coords.lng] as [number, number] } : {})}
+                  height="520px"
+                />
               </Suspense>
             </ClientOnly>
             <p className="mt-3 text-xs text-muted-foreground">

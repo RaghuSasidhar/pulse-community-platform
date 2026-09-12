@@ -46,6 +46,7 @@
   --color-sev-2: var(--sev-2);
   --color-sev-3: var(--sev-3);
   --color-sev-4: var(--sev-4);
+  --color-sev-foreground: var(--sev-foreground);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -73,10 +74,12 @@
   --soft-purple: oklch(0.879 0.052 316);
   --bright-grey: oklch(0.936 0.005 275);
 
-  --sev-1: oklch(0.865 0.033 268);
-  --sev-2: oklch(0.862 0.045 292);
-  --sev-3: oklch(0.879 0.052 316);
-  --sev-4: oklch(0.427 0.183 265);
+  /* Severity scale — deliberately distinct hues so tiers read at a glance */
+  --sev-1: oklch(0.68 0.15 152);
+  --sev-2: oklch(0.78 0.16 85);
+  --sev-3: oklch(0.68 0.18 45);
+  --sev-4: oklch(0.55 0.22 27);
+  --sev-foreground: oklch(0.99 0 0);
 
   --background: oklch(0.936 0.005 275);
   --foreground: oklch(0.209 0.076 269);

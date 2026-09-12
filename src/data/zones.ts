@@ -51,11 +51,35 @@ export const severityToken: Record<SeverityTier, string> = {
 };
 
 export const severityChip: Record<SeverityTier, string> = {
-  low: "bg-sev-1 text-nightfall",
+  low: "bg-sev-1 text-sev-foreground",
   moderate: "bg-sev-2 text-nightfall",
-  high: "bg-sev-3 text-nightfall",
-  critical: "bg-sev-4 text-primary-foreground",
+  high: "bg-sev-3 text-sev-foreground",
+  critical: "bg-sev-4 text-sev-foreground",
 };
+
+/** Left accent border used on rows/cards to colour-code a tier. */
+export const severityBorder: Record<SeverityTier, string> = {
+  low: "border-l-sev-1",
+  moderate: "border-l-sev-2",
+  high: "border-l-sev-3",
+  critical: "border-l-sev-4",
+};
+
+/** Great-circle distance in km. */
+export function distanceKm(
+  a: { lat: number; lng: number },
+  b: { lat: number; lng: number },
+) {
+  const R = 6371;
+  const dLat = ((b.lat - a.lat) * Math.PI) / 180;
+  const dLng = ((b.lng - a.lng) * Math.PI) / 180;
+  const la1 = (a.lat * Math.PI) / 180;
+  const la2 = (b.lat * Math.PI) / 180;
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(la1) * Math.cos(la2) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
 
 export const MY_AREA_ZONE_ID = "z-vijayawada-benz";
 

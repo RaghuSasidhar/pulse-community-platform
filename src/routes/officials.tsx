@@ -13,7 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { K_ANONYMITY_THRESHOLD, severityChip, severityLabel } from "@/data/zones";
+import {
+  K_ANONYMITY_THRESHOLD,
+  severityBorder,
+  severityChip,
+  severityLabel,
+} from "@/data/zones";
 import { useZones } from "@/lib/zones-context";
 
 export const Route = createFileRoute("/officials")({
@@ -132,7 +137,9 @@ function Officials() {
                   .sort((a, b) => b.severityScore - a.severityScore)
                   .map((z) => (
                     <TableRow key={z.id}>
-                      <TableCell>
+                      <TableCell
+                        className={`border-l-4 ${severityBorder[z.severity]}`}
+                      >
                         <Link
                           to="/zone/$zoneId"
                           params={{ zoneId: z.id }}
