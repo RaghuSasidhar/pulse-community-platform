@@ -146,10 +146,23 @@ export default function ZoneMap({
     ).addTo(map);
 
     visible.forEach((z) => {
-      const marker = L.marker([z.lat, z.lng], { icon: countBubble(z) }).addTo(map);
-      marker.bindTooltip(`${z.name} — ${z.severity} (${z.severityScore})`, {
-        direction: "top",
-      });
+      const color = TIER_COLOR[z.severity];
+      L.circle([z.lat, z.lng], {
+        radius: 1400 + z.severityScore * 18,
+        color,
+        weight: 2,
+        opacity: 0.9,
+        fillColor: color,
+        fillOpacity: 0.12,
+      })
+        .addTo(map)
+        .on("click", () => selectRef.current?.(z.id));
+
+      const marker = L.marker([z.lat, z.lng], { icon: zoneBadge(z) }).addTo(map);
+      marker.bindTooltip(
+        `${z.name} — ${TIER_LABEL[z.severity]} (${z.severityScore}/100)`,
+        { direction: "top" },
+      );
       marker.on("click", () => selectRef.current?.(z.id));
     });
 
