@@ -1,6 +1,6 @@
 import { ClientOnly, Link, createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, Crosshair } from "lucide-react";
-import { Suspense, lazy, useState } from "react";
+import { ArrowUpRight, Crosshair, MapPin } from "lucide-react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 
 import DiseaseAlert from "@/components/disease-alert";
 import { PageShell } from "@/components/page-shell";
@@ -8,10 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   MY_AREA_ZONE_ID,
+  distanceKm,
   severityChip,
   severityLabel,
+  severityOrder,
 } from "@/data/zones";
 import { usePulse } from "@/lib/pulse-context";
+import { useMyLocation } from "@/lib/use-my-location";
 import { useZones } from "@/lib/zones-context";
 
 const ZoneMap = lazy(() => import("@/components/zone-map"));
