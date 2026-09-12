@@ -33,21 +33,50 @@ function scatter(zone: Zone, seed: number) {
   return points;
 }
 
-function countBubble(zone: Zone) {
+const TIER_COLOR: Record<Zone["severity"], string> = {
+  low: "#16a34a",
+  moderate: "#eab308",
+  high: "#f97316",
+  critical: "#dc2626",
+};
+
+const TIER_LABEL: Record<Zone["severity"], string> = {
+  low: "Low",
+  moderate: "Moderate",
+  high: "High",
+  critical: "Critical",
+};
+
+/** Colour-coded badge showing the area name, tier and report count. */
+function zoneBadge(zone: Zone) {
   const total = zone.severityScore * 4 + 12;
-  const size = total > 250 ? 46 : total > 120 ? 38 : 30;
+  const color = TIER_COLOR[zone.severity];
   return L.divIcon({
-    className: "pulse-count-bubble",
+    className: "pulse-zone-badge",
     html: `<span style="
-      display:flex;align-items:center;justify-content:center;
-      width:${size}px;height:${size}px;border-radius:9999px;
-      background:rgba(11,23,61,.55);color:#fff;
-      font:600 ${size > 40 ? 13 : 12}px ui-sans-serif,system-ui;
-      border:1.5px solid rgba(255,255,255,.65);
+      display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+      padding:3px 8px;border-radius:9999px;
+      background:${color};color:#fff;
+      font:600 11px ui-sans-serif,system-ui;
+      border:2px solid rgba(255,255,255,.9);
       box-shadow:0 2px 10px rgba(11,23,61,.35);
-    ">${total}</span>`,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
+      transform:translate(-50%,-50%);
+    ">${zone.name} · ${TIER_LABEL[zone.severity]} · ${total}</span>`,
+    iconSize: [0, 0],
+    iconAnchor: [0, 0],
+  });
+}
+
+function userIcon() {
+  return L.divIcon({
+    className: "pulse-user-dot",
+    html: `<span style="
+      display:block;width:16px;height:16px;border-radius:9999px;
+      background:#1e42ac;border:3px solid #fff;
+      box-shadow:0 0 0 6px rgba(30,66,172,.25);
+    "></span>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
   });
 }
 
@@ -56,6 +85,7 @@ type Props = {
   center?: [number, number];
   focusZoneId?: string | null;
   onSelectZone?: (zoneId: string) => void;
+  userPosition?: [number, number];
   height?: string;
 };
 
@@ -64,6 +94,7 @@ export default function ZoneMap({
   center = [16.5, 80.65],
   focusZoneId = null,
   onSelectZone,
+  userPosition,
   height = "480px",
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
