@@ -65,6 +65,33 @@ export const severityBorder: Record<SeverityTier, string> = {
   critical: "border-l-sev-4",
 };
 
+/** Plain-language safety verdict for the visitor's own area. */
+export const severityVerdict: Record<
+  SeverityTier,
+  { label: string; detail: string }
+> = {
+  low: {
+    label: "Your area looks safe right now",
+    detail:
+      "No significant illness signals are clustering here. Keep an eye on this page — it updates as new reports come in.",
+  },
+  moderate: {
+    label: "Your area is mostly safe — stay aware",
+    detail:
+      "Some illness signals are building up here. Basic precautions are enough for most people.",
+  },
+  high: {
+    label: "Your area is at elevated risk",
+    detail:
+      "Illness signals are clearly rising here. Follow the precautions listed for this area.",
+  },
+  critical: {
+    label: "Your area is at high risk",
+    detail:
+      "Strong illness signals are clustering here. Take precautions seriously and watch for updates from health authorities.",
+  },
+};
+
 /** Great-circle distance in km. */
 export function distanceKm(
   a: { lat: number; lng: number },

@@ -1,5 +1,5 @@
 import { ClientOnly, Link, createFileRoute } from "@tanstack/react-router";
-import { ArrowUpRight, Crosshair, MapPin } from "lucide-react";
+import { ArrowUpRight, Crosshair, MapPin, OctagonAlert, ShieldAlert, ShieldCheck } from "lucide-react";
 import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 
 import DiseaseAlert from "@/components/disease-alert";
@@ -12,6 +12,7 @@ import {
   severityChip,
   severityLabel,
   severityOrder,
+  severityVerdict,
 } from "@/data/zones";
 import { usePulse } from "@/lib/pulse-context";
 import { useMyLocation } from "@/lib/use-my-location";
@@ -107,7 +108,28 @@ function Dashboard() {
             <p className="text-xs uppercase tracking-widest opacity-70">
               Your area
             </p>
-            <p className="mt-2 text-2xl font-semibold">{myArea.name}</p>
+            <div className="mt-3 flex items-start gap-3">
+              <span
+                className={`mt-1 inline-flex size-9 shrink-0 items-center justify-center rounded-full ${severityChip[myArea.severity]}`}
+              >
+                {myArea.severity === "low" ? (
+                  <ShieldCheck className="size-5" />
+                ) : myArea.severity === "moderate" ? (
+                  <ShieldAlert className="size-5" />
+                ) : (
+                  <OctagonAlert className="size-5" />
+                )}
+              </span>
+              <div>
+                <p className="text-lg font-semibold leading-snug">
+                  {severityVerdict[myArea.severity].label}
+                </p>
+                <p className="mt-1 text-xs opacity-70">
+                  {severityVerdict[myArea.severity].detail}
+                </p>
+              </div>
+            </div>
+            <p className="mt-4 text-2xl font-semibold">{myArea.name}</p>
             <p className="numeral mt-1 text-sm opacity-70">
               {myArea.district} · pop. {myArea.population.toLocaleString()}
             </p>
