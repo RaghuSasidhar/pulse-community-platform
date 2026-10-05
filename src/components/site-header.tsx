@@ -16,6 +16,7 @@ const languages: { code: Language; label: string }[] = [
   { code: "en", label: "English" },
   { code: "hi", label: "हिन्दी" },
   { code: "mr", label: "मराठी" },
+  { code: "te", label: "తెలుగు" },
 ];
 
 export function SiteHeader() {
