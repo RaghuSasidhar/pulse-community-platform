@@ -44,7 +44,7 @@ export function ReportFrame({
       <PageHeader eyebrow={eyebrow} title={title} description={description} />
       <div className="mx-auto w-full max-w-5xl space-y-6 px-4 py-10 sm:px-6">
         <Link to="/" className="inline-flex items-center text-sm text-muted-foreground">
-          <ArrowLeft className="mr-1.5 size-4" /> Back to map
+          <ArrowLeft className="mr-1.5 size-4" /> {tr("Back to map")}
         </Link>
 
         <Card>

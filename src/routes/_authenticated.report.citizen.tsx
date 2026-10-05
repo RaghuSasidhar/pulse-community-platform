@@ -121,7 +121,7 @@ function CitizenReport() {
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>{tr("Severity")}</span>
                       <span className="numeral">
-                        {tr(severityWords[(selected[s] ?? 3) - 1])}
+                        {tr(severityWords[(selected[s] ?? 3) - 1] ?? "Noticeable")}
                       </span>
                     </div>
                     <Slider
