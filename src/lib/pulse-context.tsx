@@ -47,7 +47,7 @@ export type SubmittedReport = {
   submittedAt: string;
 };
 
-export type Language = "en" | "hi" | "mr";
+export type Language = "en" | "hi" | "mr" | "te";
 
 const STORAGE_KEY = "pulse.session.v1";
 const REPORTS_KEY = "pulse.reports.v1";
@@ -111,6 +111,28 @@ const dictionary: Record<Language, Record<string, string>> = {
     "severity.critical": "गंभीर",
     "disclaimer":
       "पल्स केवल क्षेत्र-स्तरीय पैटर्न दिखाता है। यह किसी व्यक्ति का निदान नहीं करता।",
+  },
+  te: {
+    "nav.dashboard": "డ్యాష్‌బోర్డ్",
+    "nav.about": "పరిచయం",
+    "nav.privacy": "గోప్యత",
+    "nav.faq": "తరచుగా అడిగే ప్రశ్నలు",
+    "nav.officials": "అధికారులు",
+    "nav.myReports": "నా నివేదికలు",
+    "nav.signOut": "సైన్ అవుట్",
+    "cta.report": "మీ ప్రాంతంలోని సమస్యను నివేదించండి",
+    "dash.title": "సామాజిక ఆరోగ్య సంకేతాల పటం",
+    "dash.subtitle":
+      "రోజువారీ నివేదికల ఆధారంగా ప్రాంతాలవారీ అనారోగ్య ధోరణులు. ఇది వ్యాధి నిర్ధారణ కాదు.",
+    "dash.legend": "తీవ్రత",
+    "dash.zones": "ప్రాంతాలు",
+    "dash.locate": "నా స్థానాన్ని ఉపయోగించండి",
+    "severity.low": "తక్కువ",
+    "severity.moderate": "మధ్యస్థం",
+    "severity.high": "అధికం",
+    "severity.critical": "అత్యంత తీవ్రం",
+    "disclaimer":
+      "పల్స్ ప్రాంతాలవారీ ధోరణులను మాత్రమే చూపిస్తుంది. వ్యక్తులకు వ్యాధి నిర్ధారణ చేయదు; అధికారిక వ్యాధి సమాచారానికి ప్రత్యామ్నాయం కాదు.",
   },
   mr: {
     "nav.dashboard": "डॅशबोर्ड",
