@@ -1,3 +1,4 @@
+import { useReportText } from "@/lib/report-translations";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -46,6 +47,7 @@ const symptoms = [
 const severityWords = ["Very mild", "Mild", "Noticeable", "Severe", "Very severe"];
 
 function CitizenReport() {
+  const tr = useReportText();
   const { addReport } = usePulse();
   const { getZone } = useZones();
   const navigate = useNavigate();
@@ -65,10 +67,11 @@ function CitizenReport() {
   const submit = () => {
     const entries = Object.entries(selected);
     if (!entries.length) {
-      toast.error("Select at least one symptom");
+      toast.error(tr("Select at least one symptom"));
       return;
     }
-    const zone = getZone(zoneId)!;
+    const zone = getZone(zoneId);
+    if (!zone) return;
     addReport({
       role: "citizen",
       zoneId,
@@ -84,15 +87,15 @@ function CitizenReport() {
 
   return (
     <ReportFrame
-      eyebrow="Citizen report"
-      title="What are you experiencing?"
-      description="Tick everything that applies. A slider appears for each one so you can say how severe it feels. Nothing here is a diagnosis."
+      eyebrow={tr("Citizen report")}
+      title={tr("What are you experiencing?")}
+      description={tr("Tick everything that applies. A slider appears for each one so you can say how severe it feels. Nothing here is a diagnosis.")}
       zoneId={zoneId}
       onZoneChange={setZoneId}
       onSubmit={submit}
     >
       <div className="space-y-3">
-        <Label>Symptoms</Label>
+        <Label>{tr("Symptoms")}</Label>
         <div className="grid gap-3 sm:grid-cols-2">
           {symptoms.map((s) => {
             const active = s in selected;
@@ -110,15 +113,15 @@ function CitizenReport() {
                     onCheckedChange={(c) => toggle(s, c === true)}
                   />
                   <Label htmlFor={s} className="cursor-pointer text-sm font-normal">
-                    {s}
+                    {tr(s)}
                   </Label>
                 </div>
                 {active ? (
                   <div className="mt-4">
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>Severity</span>
+                      <span>{tr("Severity")}</span>
                       <span className="numeral">
-                        {severityWords[(selected[s] ?? 3) - 1]}
+                        {tr(severityWords[(selected[s] ?? 3) - 1])}
                       </span>
                     </div>
                     <Slider
@@ -140,12 +143,12 @@ function CitizenReport() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="notes">Anything else worth noting (optional)</Label>
+        <Label htmlFor="notes">{tr("Anything else worth noting (optional)")}</Label>
         <Textarea
           id="notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="e.g. several neighbours have the same thing"
+          placeholder={tr("e.g. several neighbours have the same thing")}
         />
       </div>
     </ReportFrame>

@@ -1,3 +1,4 @@
+import { useReportText } from "@/lib/report-translations";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -88,25 +89,28 @@ const subtypes: {
 ];
 
 function DoctorReport() {
+  const tr = useReportText();
   const { addReport } = usePulse();
   const { getZone } = useZones();
   const navigate = useNavigate();
   const [zoneId, setZoneId] = useState(MY_AREA_ZONE_ID);
-  const [subtype, setSubtype] = useState(subtypes[0]!.id);
+  const [subtype, setSubtype] = useState("gp");
   const [values, setValues] = useState<Record<string, string>>({});
   const [notes, setNotes] = useState("");
 
-  const active = subtypes.find((s) => s.id === subtype)!;
+  const active = subtypes.find((s) => s.id === subtype);
 
   const submit = () => {
+    if (!active) return;
     const filled = active.fields
       .filter((f) => (values[`${active.id}:${f.key}`] ?? "").trim() !== "")
       .map((f) => `${f.key}: ${values[`${active.id}:${f.key}`]}`);
     if (!filled.length) {
-      toast.error("Fill at least one field");
+      toast.error(tr("Fill at least one field"));
       return;
     }
-    const zone = getZone(zoneId)!;
+    const zone = getZone(zoneId);
+    if (!zone) return;
     addReport({
       role: "doctor",
       zoneId,
@@ -119,9 +123,9 @@ function DoctorReport() {
 
   return (
     <ReportFrame
-      eyebrow="Doctor report"
-      title="Clinical reporting"
-      description="Pick the setting you are reporting from. Clinical reports carry more weight in the severity calculation than citizen self-reports."
+      eyebrow={tr("Doctor report")}
+      title={tr("Clinical reporting")}
+      description={tr("Pick the setting you are reporting from. Clinical reports carry more weight in the severity calculation than citizen self-reports.")}
       zoneId={zoneId}
       onZoneChange={setZoneId}
       onSubmit={submit}
@@ -130,21 +134,21 @@ function DoctorReport() {
         <TabsList className="flex h-auto w-full flex-wrap justify-start">
           {subtypes.map((s) => (
             <TabsTrigger key={s.id} value={s.id}>
-              {s.label}
+              {tr(s.label)}
             </TabsTrigger>
           ))}
         </TabsList>
         {subtypes.map((s) => (
           <TabsContent key={s.id} value={s.id} className="space-y-5 pt-5">
-            <p className="text-sm text-muted-foreground">{s.blurb}</p>
+            <p className="text-sm text-muted-foreground">{tr(s.blurb)}</p>
             <div className="grid gap-4 sm:grid-cols-2">
               {s.fields.map((f) => (
                 <div key={f.key} className="space-y-2">
-                  <Label htmlFor={`${s.id}:${f.key}`}>{f.label}</Label>
+                  <Label htmlFor={`${s.id}:${f.key}`}>{tr(f.label)}</Label>
                   <Input
                     id={`${s.id}:${f.key}`}
                     type={f.type === "number" ? "number" : "text"}
-                    placeholder={f.placeholder}
+                    placeholder={f.placeholder ? tr(f.placeholder) : undefined}
                     value={values[`${s.id}:${f.key}`] ?? ""}
                     onChange={(e) =>
                       setValues((prev) => ({
@@ -161,12 +165,12 @@ function DoctorReport() {
       </Tabs>
 
       <div className="space-y-2">
-        <Label htmlFor="doctor-notes">Clinical note (optional)</Label>
+        <Label htmlFor="doctor-notes">{tr("Clinical note (optional)")}</Label>
         <Textarea
           id="doctor-notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Anything unusual about presentation, timing or geography"
+          placeholder={tr("Anything unusual about presentation, timing or geography")}
         />
       </div>
     </ReportFrame>

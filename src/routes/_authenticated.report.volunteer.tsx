@@ -1,3 +1,4 @@
+import { useReportText } from "@/lib/report-translations";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -48,6 +49,7 @@ const counts = [
 ];
 
 function VolunteerReport() {
+  const tr = useReportText();
   const { addReport } = usePulse();
   const { getZone } = useZones();
   const navigate = useNavigate();
@@ -61,10 +63,11 @@ function VolunteerReport() {
       .filter((c) => (values[c.key] ?? "").trim() !== "")
       .map((c) => `${c.key}: ${values[c.key]}`);
     if (!checked.length && !filled.length) {
-      toast.error("Add at least one alert or count");
+      toast.error(tr("Add at least one alert or count"));
       return;
     }
-    const zone = getZone(zoneId)!;
+    const zone = getZone(zoneId);
+    if (!zone) return;
     addReport({
       role: "volunteer",
       zoneId,
@@ -81,19 +84,19 @@ function VolunteerReport() {
 
   return (
     <ReportFrame
-      eyebrow="Volunteer report"
-      title="What is your community seeing?"
-      description="Informal alerts and household tallies together give the earliest warning of a cluster forming, often before anyone visits a clinic."
+      eyebrow={tr("Volunteer report")}
+      title={tr("What is your community seeing?")}
+      description={tr("Informal alerts and household tallies together give the earliest warning of a cluster forming, often before anyone visits a clinic.")}
       zoneId={zoneId}
       onZoneChange={setZoneId}
       onSubmit={submit}
     >
       <div className="space-y-3">
-        <Label>Surge alerts and rumours</Label>
+        <Label>{tr("Surge alerts and rumours")}</Label>
         <div className="grid gap-2 sm:grid-cols-2">
           {alerts.map((a) => (
             <label
-              key={a}
+              key={tr(a)}
               className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3 text-sm"
             >
               <Checkbox
@@ -104,19 +107,19 @@ function VolunteerReport() {
                   )
                 }
               />
-              {a}
+              {tr(a)}
             </label>
           ))}
         </div>
       </div>
 
       <div className="space-y-3">
-        <Label>Case-based counts (S-Form)</Label>
+        <Label>{tr("Case-based counts (S-Form)")}</Label>
         <div className="grid gap-4 sm:grid-cols-2">
           {counts.map((c) => (
             <div key={c.key} className="space-y-2">
               <Label htmlFor={c.key} className="text-sm font-normal text-muted-foreground">
-                {c.label}
+                {tr(c.label)}
               </Label>
               <Input
                 id={c.key}
@@ -132,12 +135,12 @@ function VolunteerReport() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="vol-notes">Field note (optional)</Label>
+        <Label htmlFor="vol-notes">{tr("Field note (optional)")}</Label>
         <Textarea
           id="vol-notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="What people in the area are saying"
+          placeholder={tr("What people in the area are saying")}
         />
       </div>
     </ReportFrame>

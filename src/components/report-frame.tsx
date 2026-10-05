@@ -1,3 +1,4 @@
+import { useReportText } from "@/lib/report-translations";
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import type { ReactNode } from "react";
@@ -36,6 +37,7 @@ export function ReportFrame({
   children: ReactNode;
   aside?: ReactNode;
 }) {
+  const tr = useReportText();
   const { zones } = useZones();
   return (
     <PageShell>
@@ -48,10 +50,10 @@ export function ReportFrame({
         <Card>
           <CardContent className="space-y-6 p-6">
             <div className="space-y-2">
-              <Label>Area this report covers</Label>
+              <Label>{tr("Area this report covers")}</Label>
               <Select value={zoneId} onValueChange={onZoneChange}>
                 <SelectTrigger className="w-full sm:w-80">
-                  <SelectValue placeholder="Select an area" />
+                  <SelectValue placeholder={tr("Select an area")} />
                 </SelectTrigger>
                 <SelectContent>
                   {zones.map((z) => (
@@ -62,7 +64,7 @@ export function ReportFrame({
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                Reports are recorded against an area, never a precise address.
+                {tr("Reports are recorded against an area, never a precise address.")}
               </p>
             </div>
 
@@ -70,10 +72,10 @@ export function ReportFrame({
 
             <div className="flex flex-wrap items-center gap-3 border-t border-border pt-5">
               <Button onClick={onSubmit} size="lg">
-                {submitLabel}
+                {tr(submitLabel)}
               </Button>
               <span className="text-xs text-muted-foreground">
-                Saved to the shared signal database and counted into your area.
+                {tr("Saved to the shared signal database and counted into your area.")}
               </span>
             </div>
           </CardContent>

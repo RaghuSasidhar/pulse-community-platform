@@ -1,3 +1,4 @@
+import { useReportText } from "@/lib/report-translations";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -58,22 +59,24 @@ const pathogens = [
 ];
 
 function LabReport() {
+  const tr = useReportText();
   const { addReport } = usePulse();
   const { getZone } = useZones();
   const navigate = useNavigate();
   const [zoneId, setZoneId] = useState(MY_AREA_ZONE_ID);
-  const [testType, setTestType] = useState(testTypes[0]!);
-  const [pathogen, setPathogen] = useState(pathogens[0]!);
+  const [testType, setTestType] = useState("Confirmatory pathogen panel");
+  const [pathogen, setPathogen] = useState("Influenza A");
   const [tested, setTested] = useState("");
   const [positive, setPositive] = useState("");
   const [notes, setNotes] = useState("");
 
   const submit = () => {
     if (!positive.trim()) {
-      toast.error("Enter the number of positive results");
+      toast.error(tr("Enter the number of positive results"));
       return;
     }
-    const zone = getZone(zoneId)!;
+    const zone = getZone(zoneId);
+    if (!zone) return;
     addReport({
       role: "lab",
       zoneId,
@@ -92,16 +95,16 @@ function LabReport() {
 
   return (
     <ReportFrame
-      eyebrow="Laboratory report"
-      title="Confirmatory results"
-      description="Lab confirmation is weighted highest of all sources — it is what turns a suspected cluster into a corroborated one."
+      eyebrow={tr("Laboratory report")}
+      title={tr("Confirmatory results")}
+      description={tr("Lab confirmation is weighted highest of all sources — it is what turns a suspected cluster into a corroborated one.")}
       zoneId={zoneId}
       onZoneChange={setZoneId}
       onSubmit={submit}
     >
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label>Test type</Label>
+          <Label>{tr("Test type")}</Label>
           <Select value={testType} onValueChange={setTestType}>
             <SelectTrigger>
               <SelectValue />
@@ -109,14 +112,14 @@ function LabReport() {
             <SelectContent>
               {testTypes.map((t) => (
                 <SelectItem key={t} value={t}>
-                  {t}
+                  {tr(t)}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Pathogen / target</Label>
+          <Label>{tr("Pathogen / target")}</Label>
           <Select value={pathogen} onValueChange={setPathogen}>
             <SelectTrigger>
               <SelectValue />
@@ -124,14 +127,14 @@ function LabReport() {
             <SelectContent>
               {pathogens.map((p) => (
                 <SelectItem key={p} value={p}>
-                  {p}
+                  {tr(p)}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="tested">Samples tested</Label>
+          <Label htmlFor="tested">{tr("Samples tested")}</Label>
           <Input
             id="tested"
             type="number"
@@ -140,7 +143,7 @@ function LabReport() {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="positive">Positive results</Label>
+          <Label htmlFor="positive">{tr("Positive results")}</Label>
           <Input
             id="positive"
             type="number"
@@ -151,12 +154,12 @@ function LabReport() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="lab-notes">Laboratory note (optional)</Label>
+        <Label htmlFor="lab-notes">{tr("Laboratory note (optional)")}</Label>
         <Textarea
           id="lab-notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Sample collection window, resistance findings, anything unusual"
+          placeholder={tr("Sample collection window, resistance findings, anything unusual")}
         />
       </div>
     </ReportFrame>
