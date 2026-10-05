@@ -1,3 +1,4 @@
+import { useReportText } from "@/lib/report-translations";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -14,6 +15,8 @@ import { usePulse } from "@/lib/pulse-context";
 export const Route = createFileRoute("/_authenticated/report/pharmacy")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Pharmacy report — Pulse" },
       {
         name: "description",
@@ -40,6 +43,7 @@ const categories = [
 ];
 
 function PharmacyReport() {
+  const tr = useReportText();
   const { addReport } = usePulse();
   const { getZone } = useZones();
   const navigate = useNavigate();
@@ -53,10 +57,11 @@ function PharmacyReport() {
       .filter((c) => (values[c.key] ?? "").trim() !== "")
       .map((c) => `${c.key}: ${values[c.key]} units this week`);
     if (!filled.length) {
-      toast.error("Enter at least one category volume");
+      toast.error(tr("Enter at least one category volume"));
       return;
     }
-    const zone = getZone(zoneId)!;
+    const zone = getZone(zoneId);
+    if (!zone) return;
     addReport({
       role: "pharmacy",
       zoneId,
@@ -73,25 +78,22 @@ function PharmacyReport() {
 
   return (
     <ReportFrame
-      eyebrow="Pharmacy report"
-      title="Medicine demand this week"
-      description="Sales volume by symptom category often moves before anyone visits a clinic, which makes it a useful leading indicator."
+      eyebrow={tr("Pharmacy report")}
+      title={tr("Medicine demand this week")}
+      description={tr("Sales volume by symptom category often moves before anyone visits a clinic, which makes it a useful leading indicator.")}
       zoneId={zoneId}
       onZoneChange={setZoneId}
       onSubmit={submit}
       aside={
         <Card className="border-dashed bg-secondary/40">
           <CardContent className="p-5 text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">Draft form.</span> The
-            pharmacy reporting schema is still an open question in the product
-            spec. This version captures OTC volume by symptom category — the
-            likely shape — and will change once the schema is settled.
+            <span className="font-medium text-foreground">{tr("Draft form.")}</span> {tr("The pharmacy reporting schema is still an open question in the product spec. This version captures OTC volume by symptom category — the likely shape — and will change once the schema is settled.")}
           </CardContent>
         </Card>
       }
     >
       <div className="space-y-3">
-        <Label>Units sold this week, by symptom category</Label>
+        <Label>{tr("Units sold this week, by symptom category")}</Label>
         <div className="grid gap-4 sm:grid-cols-2">
           {categories.map((c) => (
             <div key={c.key} className="space-y-2">
@@ -99,7 +101,7 @@ function PharmacyReport() {
                 htmlFor={c.key}
                 className="text-sm font-normal text-muted-foreground"
               >
-                {c.label}
+                {tr(c.label)}
               </Label>
               <Input
                 id={c.key}
@@ -115,7 +117,7 @@ function PharmacyReport() {
       </div>
 
       <div className="space-y-2 sm:max-w-xs">
-        <Label htmlFor="baseline">Typical weekly total (optional)</Label>
+        <Label htmlFor="baseline">{tr("Typical weekly total (optional)")}</Label>
         <Input
           id="baseline"
           type="number"
@@ -123,17 +125,17 @@ function PharmacyReport() {
           onChange={(e) => setBaseline(e.target.value)}
         />
         <p className="text-xs text-muted-foreground">
-          A baseline helps separate a real spike from an ordinarily busy shop.
+          {tr("A baseline helps separate a real spike from an ordinarily busy shop.")}
         </p>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="pharm-notes">Note (optional)</Label>
+        <Label htmlFor="pharm-notes">{tr("Note (optional)")}</Label>
         <Textarea
           id="pharm-notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Stock-outs, unusual requests, repeat customers"
+          placeholder={tr("Stock-outs, unusual requests, repeat customers")}
         />
       </div>
     </ReportFrame>

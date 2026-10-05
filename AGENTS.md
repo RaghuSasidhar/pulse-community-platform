@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep report localization in a shared presentation dictionary and preserve canonical stored field identifiers, so language switching cannot change report semantics.
+- Include the requested output language in AI summary input and query keys, so cached summaries never appear in the wrong language.

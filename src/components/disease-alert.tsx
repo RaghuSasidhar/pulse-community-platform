@@ -4,7 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Activity, AlertTriangle, RefreshCw, ShieldAlert, Sparkles } from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import { severityChip, severityLabel } from "@/data/zones";
+import { Button } from "@/components/ui/button";
+import { severityChip } from "@/data/zones";
+import { useReportText } from "@/lib/report-translations";
 import { useZones } from "@/lib/zones-context";
 import { usePulse } from "@/lib/pulse-context";
 import { summarizeZoneSignals } from "@/lib/zone-summary.functions";
@@ -14,7 +16,7 @@ type Props = {
   zoneId: string;
 };
 
-function TrendPill({ trend, trendPct }: { trend: string; trendPct: number }) {
+function TrendPill({ trend, trendPct, isTelugu }: { trend: string; trendPct: number; isTelugu: boolean }) {
   const arrow = trend === "rising" ? "▲" : trend === "falling" ? "▼" : "→";
   const tone =
     trend === "rising"
@@ -25,7 +27,7 @@ function TrendPill({ trend, trendPct }: { trend: string; trendPct: number }) {
   return (
     <span className={cn("numeral inline-flex items-center gap-1 text-xs font-medium", tone)}>
       {arrow} {trendPct > 0 ? "+" : ""}
-      {trendPct}% wk
+      {trendPct}% {isTelugu ? "వారానికి" : "wk"}
     </span>
   );
 }
@@ -34,7 +36,9 @@ function TrendPill({ trend, trendPct }: { trend: string; trendPct: number }) {
 export default function DiseaseAlert({ zoneId }: Props) {
   const { getZone } = useZones();
   const zone = getZone(zoneId);
-  const { reports } = usePulse();
+  const { reports, language, t } = usePulse();
+  const tr = useReportText();
+  const summaryLanguage = language === "te" ? "te" : "en";
   const summarize = useServerFn(summarizeZoneSignals);
 
   const recentReports = reports
@@ -43,25 +47,28 @@ export default function DiseaseAlert({ zoneId }: Props) {
     .map((r) => `${r.role}: ${r.title} — ${r.details.join("; ")}`);
 
   const query = useQuery({
-    queryKey: ["zone-ai-summary", zoneId, recentReports.length],
+    queryKey: ["zone-ai-summary", zoneId, summaryLanguage, recentReports],
     enabled: Boolean(zone),
     staleTime: 5 * 60 * 1000,
     retry: false,
-    queryFn: () =>
-      summarize({
+    queryFn: () => {
+      if (!zone) throw new Error("Area unavailable");
+      return summarize({
         data: {
-          zoneName: zone!.name,
-          district: zone!.district,
-          population: zone!.population,
-          severityScore: zone!.severityScore,
-          trend: zone!.trend,
-          trendPct: zone!.trendPct,
-          topSignals: zone!.topSignals,
-          sources: zone!.sources,
-          weekly: zone!.weekly,
+          language: summaryLanguage,
+          zoneName: zone.name,
+          district: zone.district,
+          population: zone.population,
+          severityScore: zone.severityScore,
+          trend: zone.trend,
+          trendPct: zone.trendPct,
+          topSignals: zone.topSignals,
+          sources: zone.sources,
+          weekly: zone.weekly,
           recentReports,
         },
-      }),
+      });
+    },
   });
 
   if (!zone) return null;
@@ -77,10 +84,10 @@ export default function DiseaseAlert({ zoneId }: Props) {
           </span>
           <div>
             <p className="inline-flex items-center gap-1 text-xs uppercase tracking-widest text-muted-foreground">
-              <Sparkles className="size-3" /> AI signal summary
+               <Sparkles className="size-3" /> {tr("AI signal summary")}
             </p>
             <h3 className="text-base font-semibold leading-tight">
-              {ai ? ai.disease : query.isError ? "Summary unavailable" : "Analysing reports…"}
+              {ai ? ai.disease : query.isError ? tr("Summary unavailable") : tr("Analysing reports…")}
             </h3>
           </div>
         </div>
@@ -90,7 +97,7 @@ export default function DiseaseAlert({ zoneId }: Props) {
             severityChip[zone.severity],
           )}
         >
-          {severityLabel[zone.severity]}
+          {t(`severity.${zone.severity}`)}
         </span>
       </div>
 
@@ -106,16 +113,16 @@ export default function DiseaseAlert({ zoneId }: Props) {
       {query.isError && (
         <div className="space-y-3 text-sm">
           <p className="text-muted-foreground">
-            {(query.error as Error).message ||
-              "The AI summary service could not be reached."}
+            {tr("The AI summary service could not be reached.")}
           </p>
-          <button
+          <Button
             type="button"
+            variant="ghost"
             onClick={() => query.refetch()}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
           >
-            <RefreshCw className="size-3.5" /> Try again
-          </button>
+            <RefreshCw className="size-3.5" /> {tr("Try again")}
+          </Button>
         </div>
       )}
 
@@ -123,9 +130,9 @@ export default function DiseaseAlert({ zoneId }: Props) {
         <>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
             <span className="numeral font-medium">
-              ~{ai.affectedEstimate} people affected
+              {language === "te" ? `సుమారు ${ai.affectedEstimate} మందిపై ప్రభావం` : `~${ai.affectedEstimate} people affected`}
             </span>
-            <TrendPill trend={zone.trend} trendPct={zone.trendPct} />
+            <TrendPill trend={zone.trend} trendPct={zone.trendPct} isTelugu={language === "te"} />
             <span
               className={cn(
                 "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium",
@@ -136,7 +143,7 @@ export default function DiseaseAlert({ zoneId }: Props) {
                     : "bg-slate-100 text-slate-600",
               )}
             >
-              Confidence: {ai.confidence}
+              {tr("Confidence")}: {tr(ai.confidence)}
             </span>
           </div>
 
@@ -144,22 +151,22 @@ export default function DiseaseAlert({ zoneId }: Props) {
 
           <div>
             <p className="text-xs uppercase tracking-widest text-muted-foreground">
-              Matched signals
+              {tr("Matched signals")}
             </p>
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {zone.topSignals.map((s) => (
+              {zone.topSignals.map((s, index) => (
                 <span
                   key={s.label}
                   className="rounded-md bg-sev-2/40 px-2 py-0.5 text-xs font-medium text-nightfall"
                 >
-                  {s.label} · {s.count}
+                  {ai.signalLabels[index] ?? tr(s.label)} · {s.count}
                 </span>
               ))}
             </div>
           </div>
 
           <p className="text-sm text-muted-foreground">
-            <span className="font-medium text-foreground">Possible reason: </span>
+            <span className="font-medium text-foreground">{tr("Possible reason")}: </span>
             {ai.possibleReason}
           </p>
 
@@ -176,8 +183,7 @@ export default function DiseaseAlert({ zoneId }: Props) {
       <div className="flex items-center gap-2 rounded-lg bg-amber-50 p-3 text-xs text-amber-800">
         <ShieldAlert className="size-4 shrink-0" />
         <span>
-          AI-generated pattern summary — not a diagnosis or confirmed outbreak.
-          Treat as an early indicator pending health-authority review.
+          {tr("AI-generated pattern summary — not a diagnosis or confirmed outbreak. Treat as an early indicator pending health-authority review.")}
         </span>
       </div>
 
@@ -186,7 +192,7 @@ export default function DiseaseAlert({ zoneId }: Props) {
           <AlertTriangle className="size-3.5" /> {zone.name}, {zone.district}
         </span>
         <span>
-          {query.isFetching ? "Updating…" : `Based on ${reports.filter((r) => r.zoneId === zoneId).length} new report(s) this session`}
+          {query.isFetching ? tr("Updating…") : language === "te" ? `ఈ సందర్శనలో ${recentReports.length} కొత్త నివేదికల ఆధారంగా` : `Based on ${recentReports.length} new report(s) this session`}
         </span>
       </div>
 
@@ -195,7 +201,7 @@ export default function DiseaseAlert({ zoneId }: Props) {
         params={{ zoneId: zone.id }}
         className="text-sm font-medium text-primary hover:underline"
       >
-        View full zone breakdown →
+        {tr("View full zone breakdown →")}
       </Link>
     </div>
   );

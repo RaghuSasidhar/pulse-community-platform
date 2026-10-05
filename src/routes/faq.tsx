@@ -55,7 +55,7 @@ const faqs = [
   },
   {
     q: "Which languages are supported?",
-    a: "Navigation and key dashboard labels are available in English, Hindi, Marathi and Telugu. Some page content and AI-generated explanations remain in English.",
+    a: "Navigation and key dashboard labels are available in English, Hindi, Marathi and Telugu. All five reporting forms and AI summaries are also available in Telugu; some other page content remains in English.",
   },
   {
     q: "Is this the real system?",

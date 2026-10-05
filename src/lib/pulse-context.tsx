@@ -230,10 +230,10 @@ export function PulseProvider({ children }: { children: ReactNode }) {
           void queryClient.invalidateQueries({ queryKey: ["zones"] });
         })
         .catch(() => {
-          toast.error("Saved locally, but we could not reach the server.");
+          toast.error(language === "te" ? "ఈ పరికరంలో భద్రపరచబడింది, కానీ ఉమ్మడి సమాచారంలో నమోదు చేయలేకపోయాము." : "Saved locally, but we could not reach the server.");
         });
     },
-    [queryClient],
+    [queryClient, language],
   );
 
   const setLanguage = useCallback((lang: Language) => {
