@@ -188,7 +188,7 @@ export function translateReportText(text: string, isTelugu: boolean): string {
     return `${translateReportText(text.replace(/ clinical report$/, ""), true)} — వైద్య నివేదిక`;
   }
   const parts = text.split(/( — |: | · )/);
-  if (parts.length > 1) return parts.map((part) => translateReportText(part, true)).join("");
+  if (parts.length > 1) return parts.map((part, index) => index % 2 ? part : translateReportText(part, true)).join("");
   const units = text.match(/^(.*) units this week$/);
   if (units) return `ఈ వారంలో ${units[1]} యూనిట్లు`;
   return text;
