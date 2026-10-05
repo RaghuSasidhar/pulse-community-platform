@@ -15,6 +15,8 @@ import { usePulse } from "@/lib/pulse-context";
 export const Route = createFileRoute("/_authenticated/report/volunteer")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Community report — Pulse for volunteers" },
       {
         name: "description",
@@ -96,7 +98,7 @@ function VolunteerReport() {
         <div className="grid gap-2 sm:grid-cols-2">
           {alerts.map((a) => (
             <label
-              key={tr(a)}
+              key={a}
               className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3 text-sm"
             >
               <Checkbox

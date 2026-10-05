@@ -11,6 +11,8 @@ import { useReportText } from "@/lib/report-translations";
 export const Route = createFileRoute("/_authenticated/report/submitted")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Report received — Pulse" },
       {
         name: "description",

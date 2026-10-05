@@ -15,6 +15,8 @@ import { usePulse } from "@/lib/pulse-context";
 export const Route = createFileRoute("/_authenticated/report/pharmacy")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Pharmacy report — Pulse" },
       {
         name: "description",
