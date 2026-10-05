@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { usePulse } from "@/lib/pulse-context";
 
 export function PageShell({ children }: { children: ReactNode }) {
   return (
@@ -44,10 +45,10 @@ export function PageHeader({
 }
 
 export function Disclaimer() {
+  const { t } = usePulse();
   return (
     <p className="rounded-lg border border-border bg-secondary/60 p-3 text-xs text-muted-foreground">
-      Pulse shows area-level patterns only. It never diagnoses individuals and
-      does not replace statutory disease notification.
+      {t("disclaimer")}
     </p>
   );
 }
