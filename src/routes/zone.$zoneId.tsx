@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { WeeklyTrendChart } from "@/components/weekly-trend-chart";
 import { severityChip, severityLabel } from "@/data/zones";
 import { zonesQueryOptions } from "@/lib/zones-context";
 
@@ -21,6 +22,11 @@ export const Route = createFileRoute("/zone/$zoneId")({
       return {
         meta: [
           { title: "Zone unavailable — Pulse" },
+          { name: "description", content: "This Pulse health signal area is unavailable." },
+          { property: "og:title", content: "Zone unavailable — Pulse" },
+          { property: "og:description", content: "This Pulse health signal area is unavailable." },
+          { property: "og:type", content: "website" },
+          { name: "twitter:card", content: "summary_large_image" },
           { name: "robots", content: "noindex" },
         ],
       };
@@ -34,6 +40,8 @@ export const Route = createFileRoute("/zone/$zoneId")({
         { name: "description", content: description },
         { property: "og:title", content: title },
         { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
     };
   },
@@ -42,7 +50,6 @@ export const Route = createFileRoute("/zone/$zoneId")({
 
 function ZoneDetail() {
   const { zone } = Route.useLoaderData();
-  const maxWeek = Math.max(...zone.weekly);
 
   const sources = Object.entries(zone.sources) as [string, number][];
 
@@ -103,19 +110,7 @@ function ZoneDetail() {
               <CardTitle className="text-base">Seven-week trend</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex h-40 items-end gap-3">
-                {zone.weekly.map((v, i) => (
-                  <div key={i} className="flex flex-1 flex-col items-center gap-2">
-                    <div
-                      className="w-full rounded-t-md bg-primary/80"
-                      style={{ height: `${(v / maxWeek) * 100}%` }}
-                    />
-                    <span className="numeral text-[11px] text-muted-foreground">
-                      {v}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              <WeeklyTrendChart weekly={zone.weekly} />
               <p className="mt-3 text-xs text-muted-foreground">
                 Weekly aggregated reports across all sources. Latest week is on
                 the right.
