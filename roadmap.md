@@ -4,5 +4,5 @@
 - [x] Verify reporting and summary flows, including small screens.
 
 # Trend chart and screenshots
-- [ ] Render and verify seven-week bars and line from stored zone data.
-- [ ] Refresh and inspect all page screenshots, then deliver a versioned archive.
+- [x] Render and verify seven-week bars and line from stored zone data.
+- [x] Refresh and inspect all page screenshots, then deliver a versioned archive.
