@@ -11,3 +11,4 @@
 
 - Keep report localization in a shared presentation dictionary and preserve canonical stored field identifiers, so language switching cannot change report semantics.
 - Include the requested output language in AI summary input and query keys, so cached summaries never appear in the wrong language.
+- Render zone weekly trends with the shared Recharts component and a fixed-height responsive container so bars and lines share the stored data and cannot collapse.
